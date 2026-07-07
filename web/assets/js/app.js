@@ -50,6 +50,7 @@
     window.addEventListener("hashchange", route);
     route();
     wireUI();
+    setupLightbox();
   }
 
   function applyBranding() {
@@ -138,6 +139,8 @@
       const src = img.getAttribute("src") || "";
       if (!/^https?:|^\//.test(src)) img.setAttribute("src", `${manifest.site.contentBase}/${src}`);
       img.setAttribute("loading", "lazy");
+      img.classList.add("zoomable");
+      img.setAttribute("title", "Clic para ampliar");
     });
 
     // Blockquotes que son marcadores de captura -> placeholder visual
@@ -283,6 +286,49 @@
   }
 
   function closeSearch() { el("searchResults").hidden = true; el("searchInput").blur(); }
+
+  // ---------- Lightbox (ampliar imágenes) ----------
+  function setupLightbox() {
+    const overlay = document.createElement("div");
+    overlay.className = "lightbox";
+    overlay.setAttribute("aria-hidden", "true");
+    overlay.innerHTML =
+      `<button class="lb-close" aria-label="Cerrar">&times;</button>` +
+      `<figure class="lb-figure"><img class="lb-img" alt="" /><figcaption class="lb-caption"></figcaption></figure>`;
+    document.body.appendChild(overlay);
+
+    const img = overlay.querySelector(".lb-img");
+    const cap = overlay.querySelector(".lb-caption");
+
+    const open = (src, alt) => {
+      img.src = src;
+      img.alt = alt || "";
+      cap.textContent = alt || "";
+      cap.style.display = alt ? "" : "none";
+      overlay.classList.add("open");
+      overlay.setAttribute("aria-hidden", "false");
+      document.body.classList.add("lb-lock");
+    };
+    const close = () => {
+      overlay.classList.remove("open");
+      overlay.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("lb-lock");
+      img.src = "";
+    };
+
+    // Abrir al hacer clic en cualquier imagen ampliable del contenido
+    el("content").addEventListener("click", (e) => {
+      const target = e.target.closest("img.zoomable");
+      if (target) open(target.currentSrc || target.src, target.getAttribute("alt"));
+    });
+
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay || e.target.closest(".lb-close")) close();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && overlay.classList.contains("open")) close();
+    });
+  }
 
   // ---------- UI wiring ----------
   function wireUI() {
