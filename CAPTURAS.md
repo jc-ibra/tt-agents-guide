@@ -39,9 +39,17 @@ docs/capturas/
 | [x] | `03-07-tab-control-envios.png` | Tab **Control de Envíos** con sus campos. |
 | [x] | `03-08-tab-ids.png` | Tab **IDS** con Nombre y Número de empleado seleccionados. |
 
+## Parte 4 — Seguimiento (`docs/04-seguimiento.md`)
+
+| ✔ | Nombre de archivo | Qué debe mostrar |
+|---|---|---|
+| [x] | `04-01-catalogo-plantillas.png` | Menú de plantillas de seguimiento desplegado desde el botón **Responder** (§4.3). |
+| [x] | `04-02-plantilla-pendiente-sla-pausado.png` | Ticket con una plantilla de **Pendiente** aplicada y el reloj del **SLA en pausa** (§4.4). |
+| [x] | `04-03-resolver-plantilla-resolucion.png` | Botón **Resolver** con una plantilla de **Resolución** seleccionada (§4.5). |
+
 ---
 
-**Total: 12 capturas.**
+**Total: 15 capturas.**
 
-> Sugerencia: puedes ir entregando capturas por partes. En cuanto tengas las de
-> la Parte 2, ya se pueden integrar sin esperar a las de la Parte 3.
+> Sugerencia: puedes ir entregando capturas por partes. Cada una se integra en
+> cuanto la tengas, sin esperar a las demás.

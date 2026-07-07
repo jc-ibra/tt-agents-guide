@@ -44,6 +44,8 @@ Las plantillas se agrupan en cuatro tipos según el momento del ticket que docum
 - Botón **Resolver**: muestra las plantillas de tipo **Resolución** y **Cancelación**. Es la vía para dar por terminado el ticket.
 Por eso, antes de elegir la plantilla, el agente elige el botón según lo que va a hacer: actualizar o resolver.
  
+![Menú de plantillas de seguimiento desplegado desde el botón Responder](capturas/04-01-catalogo-plantillas.png)
+ 
 | Momento (nombre en GLPI) | Tipo | Qué documenta | Datos a completar |
 |---|---|---|---|
 | Soporte - IDS Asignado | Seguimiento | El ticket fue asignado a un IDS. | Referencia del IDS. |
@@ -74,6 +76,8 @@ Por qué importa: al aplicar una de estas plantillas, **GLPI pausa automáticame
  
 Regla: para dejar un ticket En espera, siempre se usa la plantilla de Pendiente. Cuando se resuelve la dependencia, el ticket se reactiva y el reloj vuelve a correr.
  
+![Ticket con una plantilla de Pendiente aplicada y el reloj del SLA en pausa](capturas/04-02-plantilla-pendiente-sla-pausado.png)
+ 
 > Recordatorio: aunque el reloj se pause, la propiedad del ticket no. El agente sigue siendo responsable de perseguir la respuesta del cliente o la llegada de la refacción, y de documentarlo.
  
 ---
@@ -85,6 +89,9 @@ Cuando el servicio queda restablecido, el agente da por terminado el ticket con 
 - Las plantillas de resolución piden dejar constancia de los pasos realizados, las fechas de inicio y término y el visto bueno del usuario.
 - El ticket en Resuelto solicita al solicitante confirmar la conformidad del servicio.
 - **El agente resuelve, pero nunca cierra.** GLPI cierra el ticket de forma automática **a las 48 horas** de estar en Resuelto sin respuesta en contra. Resolver (dejar en Resuelto) es acción del agente; cerrar (pasar a Cerrado) lo hace el sistema.
+ 
+![Botón Resolver con una plantilla de Resolución seleccionada](capturas/04-03-resolver-plantilla-resolucion.png)
+ 
 ### Cierre por cancelación
  
 Cuando un caso ya no procede (cancelado por operación o porque el servicio dejó de requerirse), GLPI **no tiene un estado Cancelado**. La forma correcta de manejarlo es la misma acción de Resolver, pero aplicando la **plantilla de Cancelación de ticket**, que registra el motivo y la fecha. El ticket queda en Resuelto con esa plantilla y luego cierra automáticamente a las 48 horas.
