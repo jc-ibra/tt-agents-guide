@@ -1,4 +1,4 @@
-/* ===== Manual GLPI — Trantor Technologies ===== */
+/* ===== Manual GLPI - Trantor Technologies ===== */
 (() => {
   "use strict";
 
@@ -59,7 +59,7 @@
     if (s.subtitle) el("brandSub").textContent = s.subtitle;
     if (s.brand) el("brandBadge").textContent = s.brand.split(/\s+/).map(w => w[0]).join("").slice(0, 2);
     if (s.platformUrl) { el("platformLink").href = s.platformUrl; }
-    document.title = `${s.title || "Manual"} — ${s.brand || ""}`.trim();
+    document.title = `${s.title || "Manual"} - ${s.brand || ""}`.trim();
   }
 
   function buildNav() {

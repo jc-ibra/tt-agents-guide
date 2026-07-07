@@ -13,14 +13,14 @@ Generado: 2026-07-06.
 
 ## Notas quitadas de los documentos (ya NO están públicas)
 
-### 1. Documentación Interna — ¿asignación por coordinador de zona?
+### 1. Documentación Interna - ¿asignación por coordinador de zona?
 - **Archivo:** `docs/anexo-a-tabla-maestra-categorias.md`
 - **Bloque:** tabla "Rama OP > AI (Áreas Internas)", fila `OP > AI > Documentación Interna`, columna *Asignación*.
 - **Texto quitado:** el marcador `(verificar)` en la celda → quedaba `Coordinador por estado (verificar)`. Ahora dice solo `Coordinador por estado`.
 - **Por qué:** era una marca de duda de Claude sobre si esa celda es correcta.
 - **A validar:** ¿`Documentación Interna` realmente se asigna al coordinador por estado (dinámica), o tiene un responsable fijo como el resto de categorías internas?
 
-### 2. Documentación Interna — comportamiento a confirmar con el administrador
+### 2. Documentación Interna - comportamiento a confirmar con el administrador
 - **Archivo:** `docs/anexo-a-tabla-maestra-categorias.md`
 - **Bloque:** sección `## Notas` (era una viñeta de la lista).
 - **Texto quitado (completo):**
@@ -28,7 +28,7 @@ Generado: 2026-07-06.
 - **Por qué:** nota dirigida al administrador señalando que el dato podría no ser correcto. Es la misma duda que la nota 1.
 - **A validar:** mismo punto que la nota 1. Si se confirma el comportamiento, no hace falta re-publicar la nota; si cambia, corregir la tabla en Anexo A y Anexo C.
 
-### 3. Matriz de prioridad — debe coincidir con la instancia
+### 3. Matriz de prioridad - debe coincidir con la instancia
 - **Archivo:** `docs/03-gestion-tickets.md`
 - **Bloque:** sección `### Urgencia, Impacto y Prioridad` (justo debajo de la tabla de la matriz de prioridad).
 - **Texto quitado (completo):**
@@ -36,7 +36,7 @@ Generado: 2026-07-06.
 - **Por qué:** es una advertencia de implementación (que la matriz del manual cuadre con la config real de GLPI), no algo que el agente use en su operación diaria.
 - **A validar:** que la matriz Baja/Media/Alta del manual sea idéntica a la configurada en la instancia. Es verificación una sola vez; no necesita estar en el manual del agente.
 
-### 4. Calendario 5x8 — confirmar detalle con el administrador
+### 4. Calendario 5x8 - confirmar detalle con el administrador
 - **Archivo:** `docs/anexo-b-sla.md`
 - **Bloque:** sección `## Qué significa el calendario 5x8`.
 - **Texto quitado (solo la última frase de la nota):**

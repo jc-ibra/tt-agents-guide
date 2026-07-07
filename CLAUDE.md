@@ -20,7 +20,7 @@ cualquier manual futuro cambiando el contenido y el manifiesto de navegación.
 helpesk-glpi/
 ├── CLAUDE.md               # este archivo
 ├── CAPTURAS.md             # guía de screenshots por tomar (nombres exactos de archivo)
-├── docs/                   # FUENTE de contenido (Markdown) — se edita aquí
+├── docs/                   # FUENTE de contenido (Markdown) - se edita aquí
 │   ├── 00-indice.md
 │   ├── 01-fundamentos.md
 │   ├── 02-primeros-pasos.md
@@ -65,7 +65,7 @@ de `docs/` en el cliente con `marked.js`. La navegación se arma desde
 el contenido sigue siendo Markdown editable, y es reutilizable para otros
 manuales.
 
-**UI de referencia:** panel tipo "Nexus" — barra superior oscura, sidebar
+**UI de referencia:** panel tipo "Nexus" - barra superior oscura, sidebar
 izquierdo con grupos de categorías, área de contenido clara tipo tarjeta.
 
 ### Cómo servir el sitio en local
