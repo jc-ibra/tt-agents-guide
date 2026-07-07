@@ -1,0 +1,42 @@
+{
+  "site": {
+    "brand": "Trantor Technologies",
+    "subtitle": "Service Desk",
+    "title": "Manual de Uso de GLPI",
+    "platformUrl": "https://helpdesk.trantortechnologies.mx",
+    "contentBase": "../docs"
+  },
+  "home": "00-indice",
+  "groups": [
+    {
+      "label": "Inicio",
+      "icon": "home",
+      "items": [
+        { "id": "00-indice", "file": "00-indice.md", "title": "Índice del manual", "icon": "book" }
+      ]
+    },
+    {
+      "label": "Manual",
+      "icon": "layers",
+      "items": [
+        { "id": "01-fundamentos", "file": "01-fundamentos.md", "title": "1. Fundamentos", "icon": "info" },
+        { "id": "02-primeros-pasos", "file": "02-primeros-pasos.md", "title": "2. Primeros pasos", "icon": "login" },
+        { "id": "03-gestion-tickets", "file": "03-gestion-tickets.md", "title": "3. Gestión de tickets", "icon": "ticket" },
+        { "id": "04-seguimiento", "file": "04-seguimiento.md", "title": "4. Seguimiento", "icon": "activity" }
+      ]
+    },
+    {
+      "label": "Anexos",
+      "icon": "bookmark",
+      "items": [
+        { "id": "anexo-a-tabla-maestra-categorias", "file": "anexo-a-tabla-maestra-categorias.md", "title": "A. Tabla maestra de categorías", "icon": "table" },
+        { "id": "anexo-b-sla", "file": "anexo-b-sla.md", "title": "B. Niveles de servicio (SLA)", "icon": "clock" },
+        { "id": "anexo-c-escalacion", "file": "anexo-c-escalacion.md", "title": "C. Rutas de escalación", "icon": "arrow-up" },
+        { "id": "anexo-d-guia-rapida", "file": "anexo-d-guia-rapida.md", "title": "D. Guía rápida", "icon": "zap" },
+        { "id": "anexo-e-caso-de-uso-ce", "file": "anexo-e-caso-de-uso-ce.md", "title": "E. Caso: Clientes Externos", "icon": "user" },
+        { "id": "anexo-f-casos-uso-activos-envios", "file": "anexo-f-casos-uso-activos-envios.md", "title": "F. Casos: Activos y Envíos", "icon": "box" },
+        { "id": "anexo-g-caso-uso-areas-internas", "file": "anexo-g-caso-uso-areas-internas.md", "title": "G. Caso: Áreas Internas", "icon": "home-2" }
+      ]
+    }
+  ]
+}
