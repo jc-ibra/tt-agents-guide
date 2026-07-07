@@ -1,10 +1,10 @@
 {
   "site": {
     "brand": "Trantor Technologies",
-    "subtitle": "Service Desk",
+    "subtitle": "Agente de Mesa de Ayuda",
     "title": "Manual de Uso de GLPI",
     "platformUrl": "https://helpdesk.trantortechnologies.mx",
-    "contentBase": "../docs"
+    "contentBase": "docs"
   },
   "home": "00-indice",
   "groups": [

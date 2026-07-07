@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>En construcción · Materiales de apoyo GLPI</title>
+  <link rel="icon" type="image/png" href="../assets/favicon.png" />
+  <link rel="stylesheet" href="../assets/portal.css" />
+  <style>
+    .center-wrap { max-width: 640px; margin: 0 auto; padding: 80px 28px; text-align: center; }
+    .const-icon {
+      width: 76px; height: 76px; border-radius: 20px; margin: 0 auto 26px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--amber-soft); color: var(--amber);
+    }
+    .center-wrap h1 { color: var(--text); font-size: clamp(24px, 3.4vw, 34px); margin: 0 0 12px; letter-spacing: -.01em; }
+    .center-wrap .sub { color: var(--brand); font-weight: 600; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 18px; }
+    .center-wrap p { color: var(--text-soft); font-size: 16px; line-height: 1.6; margin: 0 auto 30px; max-width: 520px; }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--card); border: 1px solid var(--border); color: var(--text);
+      padding: 11px 20px; border-radius: 10px; text-decoration: none; font-size: 14px; font-weight: 600;
+      box-shadow: var(--shadow);
+    }
+    .back-link:hover { border-color: var(--brand); color: var(--brand); background: var(--brand-soft); }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">
+      <span class="brand-badge" id="brandBadge">Tt</span>
+      <span class="brand-text">
+        <span class="brand-name" id="brandName">Trantor Technologies</span>
+        <span class="brand-sub">Materiales de apoyo · GLPI</span>
+      </span>
+    </a>
+  </header>
+
+  <main class="center-wrap">
+    <div class="const-icon">
+      <svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 8v5l3 2 M12 22a10 10 0 100-20 10 10 0 000 20z"/>
+      </svg>
+    </div>
+    <div class="sub" id="perfilSigla">Perfil</div>
+    <h1 id="perfilTitulo">Material en construcción</h1>
+    <p id="perfilResumen">Este material aún está en preparación. Muy pronto estará disponible aquí.</p>
+    <a class="back-link" href="../index.html">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      Volver a los perfiles
+    </a>
+  </main>
+
+  <script>
+  (async () => {
+    "use strict";
+    const params = new URLSearchParams(location.search);
+    const id = params.get("p");
+    if (!id) return;
+    try {
+      const data = await (await fetch("../perfiles.json", { cache: "no-cache" })).json();
+      const p = (data.perfiles || []).find((x) => x.id === id);
+      if (!p) return;
+      document.getElementById("perfilTitulo").textContent = `${p.titulo}: material en construcción`;
+      document.getElementById("perfilSigla").textContent = `Perfil ${p.sigla || ""}`.trim();
+      if (p.resumen) {
+        document.getElementById("perfilResumen").textContent =
+          `${p.resumen} El material de este perfil aún está en preparación y estará disponible aquí muy pronto.`;
+      }
+      document.title = `${p.titulo} · En construcción`;
+    } catch (e) { /* se mantiene el texto por defecto */ }
+  })();
+  </script>
+</body>
+</html>

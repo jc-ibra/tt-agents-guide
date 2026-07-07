@@ -1,0 +1,133 @@
+/* ===== Portal de perfiles · Trantor Technologies ===== */
+:root {
+  --navy: #0f172a;
+  --navy-2: #1e293b;
+  --bg: #f1f5f9;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --text: #0f172a;
+  --text-soft: #475569;
+  --muted: #94a3b8;
+  --brand: #2563eb;
+  --brand-soft: #eff6ff;
+  --brand-border: #bfdbfe;
+  --green: #16a34a;
+  --green-soft: #dcfce7;
+  --amber: #d97706;
+  --amber-soft: #fef3c7;
+  --radius: 14px;
+  --shadow: 0 1px 3px rgba(15, 23, 42, .06), 0 1px 2px rgba(15, 23, 42, .04);
+  --shadow-lg: 0 14px 40px rgba(15, 23, 42, .14);
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--font);
+  color: var(--text);
+  background: var(--bg);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Topbar ===== */
+.topbar {
+  display: flex; align-items: center; gap: 12px;
+  height: 60px; padding: 0 28px;
+  background: var(--navy);
+  border-bottom: 1px solid var(--navy-2);
+}
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.brand-badge {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6, #1e3a8a);
+  color: #fff; font-weight: 700; font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 0 3px rgba(59,130,246,.18);
+}
+.brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+.brand-name { color: #fff; font-weight: 600; font-size: 15px; }
+.brand-sub { color: var(--muted); font-size: 11px; letter-spacing: .05em; text-transform: uppercase; }
+.topbar-spacer { flex: 1; }
+.topbar-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #1e293b; border: 1px solid #334155; color: #e2e8f0;
+  padding: 7px 14px; border-radius: 9px; text-decoration: none; font-size: 13px; font-weight: 500;
+}
+.topbar-link:hover { background: #334155; }
+
+/* ===== Hero ===== */
+.wrap { max-width: 1040px; margin: 0 auto; padding: 56px 28px 80px; }
+.hero { max-width: 720px; margin-bottom: 40px; }
+.hero .kicker {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--brand); font-weight: 600; margin-bottom: 16px;
+}
+.hero .kicker::before { content: ""; width: 22px; height: 2px; background: var(--brand); border-radius: 2px; }
+.hero h1 { font-size: clamp(28px, 4vw, 42px); line-height: 1.1; margin: 0 0 16px; color: var(--text); letter-spacing: -.02em; }
+.hero p { font-size: clamp(15px, 1.6vw, 18px); line-height: 1.6; color: var(--text-soft); margin: 0; }
+
+/* ===== Grid de perfiles ===== */
+.section-label {
+  font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted); margin: 0 0 16px;
+}
+.grid {
+  display: grid; gap: 18px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.card {
+  position: relative; display: flex; flex-direction: column;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 24px 24px 22px;
+  text-decoration: none; color: var(--text);
+  box-shadow: var(--shadow);
+  transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+}
+.card.is-available { cursor: pointer; }
+.card.is-available:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--brand-border); }
+.card.is-construction { opacity: .92; }
+
+.card-top { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+.card-icon {
+  width: 46px; height: 46px; border-radius: 12px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--brand-soft); color: var(--brand);
+}
+.card.is-construction .card-icon { background: #f1f5f9; color: var(--muted); }
+.card-heads { min-width: 0; }
+.card-title { font-size: 17px; font-weight: 700; margin: 0; line-height: 1.25; }
+.card-sigla { font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: .04em; }
+
+.card-desc { font-size: 14px; color: var(--text-soft); line-height: 1.55; margin: 0 0 18px; flex: 1; }
+
+.card-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px;
+}
+.badge-dot { width: 7px; height: 7px; border-radius: 50%; }
+.badge.available { background: var(--green-soft); color: #166534; }
+.badge.available .badge-dot { background: var(--green); }
+.badge.construction { background: var(--amber-soft); color: #92400e; }
+.badge.construction .badge-dot { background: var(--amber); }
+
+.card-cta { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--brand); }
+.card.is-construction .card-cta { color: var(--muted); }
+
+/* ===== Footer ===== */
+.foot {
+  max-width: 1040px; margin: 0 auto; padding: 0 28px 48px;
+  color: var(--muted); font-size: 13px; line-height: 1.6;
+}
+.foot a { color: var(--brand); text-decoration: none; }
+.foot a:hover { text-decoration: underline; }
+
+@media (max-width: 720px) {
+  .grid { grid-template-columns: 1fr; }
+  .wrap { padding: 40px 20px 60px; }
+  .topbar { padding: 0 18px; }
+}

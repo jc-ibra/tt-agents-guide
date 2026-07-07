@@ -1,11 +1,11 @@
-# Guía de capturas de pantalla
+# Guía de capturas de pantalla — perfil Agente de Mesa de Ayuda (MAC)
 
-Lista de screenshots que el sitio necesita. Toma cada captura en la instancia
-real de GLPI (`https://helpdesk.trantortechnologies.mx`) y **guárdala con el
-nombre exacto indicado** dentro de la carpeta:
+Lista de screenshots que el manual del **Agente MAC** necesita. Toma cada captura
+en la instancia real de GLPI (`https://helpdesk.trantortechnologies.mx`) y
+**guárdala con el nombre exacto indicado** dentro de la carpeta:
 
 ```
-docs/capturas/
+perfiles/agente-mac/docs/capturas/
 ```
 
 - Formato: **PNG**. Ancho recomendado: ~1600 px. Oculta datos sensibles reales
@@ -17,7 +17,7 @@ docs/capturas/
 
 ---
 
-## Parte 2 - Primeros pasos (`docs/02-primeros-pasos.md`)
+## Parte 2 - Primeros pasos (`perfiles/agente-mac/docs/02-primeros-pasos.md`)
 
 | ✔ | Nombre de archivo | Qué debe mostrar |
 |---|---|---|
@@ -26,7 +26,7 @@ docs/capturas/
 | [X] | `02-03-tablero-mac.png` | Pantalla central / tablero del perfil MAC (contadores y accesos rápidos). |
 | [x] | `02-04-tickets-asignados.png` | Vista "Mis tickets" / tickets asignados al agente. |
 
-## Parte 3 - Gestión de tickets: creación (`docs/03-gestion-tickets.md`)
+## Parte 3 - Gestión de tickets: creación (`perfiles/agente-mac/docs/03-gestion-tickets.md`)
 
 | ✔ | Nombre de archivo | Qué debe mostrar |
 |---|---|---|
@@ -39,7 +39,7 @@ docs/capturas/
 | [x] | `03-07-tab-control-envios.png` | Tab **Control de Envíos** con sus campos. |
 | [x] | `03-08-tab-ids.png` | Tab **IDS** con Nombre y Número de empleado seleccionados. |
 
-## Parte 4 - Seguimiento (`docs/04-seguimiento.md`)
+## Parte 4 - Seguimiento (`perfiles/agente-mac/docs/04-seguimiento.md`)
 
 | ✔ | Nombre de archivo | Qué debe mostrar |
 |---|---|---|

@@ -1,13 +1,12 @@
-# El sitio (manual GLPI) vive dentro de /web/.
-# Al entrar a la raíz del subdominio, redirige a /web/.
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteRule ^$ /web/ [R=301,L]
-</IfModule>
-
+# La raíz del subdominio sirve el PORTAL de perfiles (index.html).
+# Cada perfil vive en /perfiles/<perfil>/ y comparte el motor en /engine/.
 DirectoryIndex index.html index.htm
 
-# No exponer el repositorio git ni los archivos internos.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+</IfModule>
+
+# No exponer los archivos internos del repositorio.
 RedirectMatch 404 /\.git
 <FilesMatch "^(CLAUDE\.md|CAPTURAS\.md|NOTAS-INTERNAS-REVISAR\.md)$">
   Require all denied

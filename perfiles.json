@@ -1,0 +1,47 @@
+{
+  "site": {
+    "brand": "Trantor Technologies",
+    "subtitle": "Materiales de apoyo · GLPI",
+    "titulo": "Materiales de apoyo para el uso de GLPI",
+    "intro": "Guías, manuales y recursos de la plataforma GLPI de Mesa de Ayuda Central. Elige tu perfil para abrir el material correspondiente.",
+    "platformUrl": "https://helpdesk.trantortechnologies.mx"
+  },
+  "perfiles": [
+    {
+      "id": "agente-mac",
+      "titulo": "Agente de Mesa de Ayuda",
+      "sigla": "MAC",
+      "resumen": "Registrar, clasificar, asignar y dar seguimiento a los tickets desde la Mesa de Ayuda Central.",
+      "icon": "headset",
+      "estado": "disponible",
+      "url": "perfiles/agente-mac/"
+    },
+    {
+      "id": "ids",
+      "titulo": "Ingeniero de Servicio",
+      "sigla": "IDS",
+      "resumen": "Resolver en sitio los tickets asignados, documentar la atención y actualizar el estado del servicio.",
+      "icon": "wrench",
+      "estado": "construccion",
+      "url": "perfiles/ids/"
+    },
+    {
+      "id": "administrativo",
+      "titulo": "Personal Administrativo",
+      "sigla": "AD",
+      "resumen": "Resolutores de áreas internas: atender y cerrar tickets de su categoría dentro de GLPI.",
+      "icon": "briefcase",
+      "estado": "construccion",
+      "url": "perfiles/administrativo/"
+    },
+    {
+      "id": "autoservicio",
+      "titulo": "Portal de Autoservicio",
+      "sigla": "AS",
+      "resumen": "Usuarios finales: levantar solicitudes, consultar el estado de sus tickets y usar la base de conocimiento.",
+      "icon": "user",
+      "estado": "construccion",
+      "url": "perfiles/autoservicio/"
+    }
+  ]
+}
