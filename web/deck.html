@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Resumen · Manual GLPI — Trantor Technologies</title>
+<link rel="icon" type="image/png" href="../docs/assets/favicon.png" />
+<style>
+  :root{
+    --navy:#0f172a; --navy-2:#1e293b; --navy-3:#172033;
+    --card:#1e293b; --border:#334155; --border-soft:#293548;
+    --text:#e2e8f0; --text-soft:#94a3b8; --muted:#64748b;
+    --brand:#3b82f6; --brand-2:#2563eb; --brand-soft:rgba(59,130,246,.14);
+    --green:#22c55e; --green-soft:rgba(34,197,94,.14);
+    --amber:#f59e0b; --amber-soft:rgba(245,158,11,.14);
+    --red:#f87171; --red-soft:rgba(248,113,113,.13);
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    font-family:var(--font); color:var(--text);
+    background:radial-gradient(1200px 600px at 80% -10%,#1c2b4a 0%,transparent 55%),var(--navy);
+    overflow:hidden;
+  }
+
+  /* ---- Barra superior fija ---- */
+  .bar{
+    position:fixed; top:0; left:0; right:0; height:52px; z-index:30;
+    display:flex; align-items:center; gap:12px; padding:0 20px;
+    background:rgba(15,23,42,.72); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border-soft);
+  }
+  .badge{
+    width:30px;height:30px;border-radius:50%;
+    background:linear-gradient(135deg,#3b82f6,#1e3a8a);
+    color:#fff;font-weight:700;font-size:12px;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 0 0 3px rgba(59,130,246,.18);
+  }
+  .bar-title{display:flex;flex-direction:column;line-height:1.15;}
+  .bar-title b{font-size:14px;color:#fff;font-weight:600;}
+  .bar-title span{font-size:10.5px;color:var(--text-soft);letter-spacing:.06em;text-transform:uppercase;}
+  .bar-spacer{flex:1;}
+  .bar a{
+    color:var(--text-soft); text-decoration:none; font-size:13px;
+    border:1px solid var(--border); padding:6px 12px; border-radius:8px;
+    display:inline-flex; align-items:center; gap:6px; transition:.15s;
+  }
+  .bar a:hover{color:#fff;border-color:var(--brand);background:var(--brand-soft);}
+
+  /* ---- Escenario de diapositivas ---- */
+  .stage{position:fixed; inset:52px 0 64px; display:flex; align-items:center; justify-content:center; padding:24px;}
+  .slide{
+    display:none; width:100%; max-width:960px; max-height:100%;
+    animation:in .45s cubic-bezier(.2,.7,.2,1);
+  }
+  .slide.active{display:block;}
+  @keyframes in{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+
+  .kicker{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--brand); font-weight:600; margin-bottom:14px;
+  }
+  .kicker::before{content:"";width:22px;height:2px;background:var(--brand);border-radius:2px;}
+  h1{font-size:clamp(28px,4.4vw,46px);line-height:1.08;margin:0 0 16px;color:#fff;letter-spacing:-.02em;}
+  h2{font-size:clamp(22px,3.2vw,34px);line-height:1.12;margin:0 0 22px;color:#fff;letter-spacing:-.01em;}
+  .lead{font-size:clamp(15px,1.7vw,19px);color:var(--text-soft);max-width:640px;line-height:1.55;}
+
+  ul.points{list-style:none;padding:0;margin:0;display:grid;gap:12px;}
+  ul.points li{
+    position:relative; padding:14px 16px 14px 46px;
+    background:var(--card); border:1px solid var(--border-soft); border-radius:12px;
+    font-size:clamp(14px,1.55vw,16.5px); line-height:1.5;
+  }
+  ul.points li b{color:#fff;}
+  ul.points li::before{
+    content:""; position:absolute; left:16px; top:50%; transform:translateY(-50%);
+    width:16px;height:16px;border-radius:50%;
+    background:var(--brand-soft); border:2px solid var(--brand);
+  }
+  ul.points.check li::before{
+    border-color:var(--green); background:var(--green-soft);
+  }
+  ul.points.warn li::before{
+    border-color:var(--amber); background:var(--amber-soft);
+  }
+
+  .grid{display:grid;gap:12px;}
+  .grid.two{grid-template-columns:1fr 1fr;}
+  .cardbox{
+    background:var(--card);border:1px solid var(--border-soft);border-radius:14px;padding:18px 20px;
+  }
+  .cardbox h3{margin:0 0 10px;font-size:15px;color:#fff;display:flex;align-items:center;gap:8px;}
+  .cardbox h3 .tag{font-size:11px;font-weight:600;letter-spacing:.04em;padding:2px 8px;border-radius:999px;}
+  .tag.blue{background:var(--brand-soft);color:#93c5fd;}
+  .tag.green{background:var(--green-soft);color:#86efac;}
+  .cardbox p{margin:0;color:var(--text-soft);font-size:14px;line-height:1.5;}
+  .cardbox ul{margin:8px 0 0;padding-left:18px;color:var(--text-soft);font-size:13.5px;line-height:1.55;}
+  .cardbox ul li{margin-bottom:4px;}
+
+  /* Flujo de pasos */
+  .flow{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch;}
+  .flow .step{
+    flex:1; min-width:150px; background:var(--card); border:1px solid var(--border-soft);
+    border-radius:12px; padding:14px 14px 14px 14px; position:relative;
+  }
+  .flow .step .n{
+    width:26px;height:26px;border-radius:50%;background:var(--brand);color:#fff;
+    font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;
+  }
+  .flow .step b{color:#fff;font-size:14px;display:block;margin-bottom:2px;}
+  .flow .step span{color:var(--text-soft);font-size:12.5px;line-height:1.4;}
+
+  /* Cadena de estados */
+  .chain{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:16px;}
+  .chain .st{background:var(--card);border:1px solid var(--border);border-radius:999px;padding:8px 16px;font-size:14px;color:#fff;font-weight:500;}
+  .chain .arr{color:var(--brand);font-weight:700;}
+  .chain .auto{background:var(--amber-soft);border-color:transparent;color:#fcd34d;}
+
+  /* Tablas */
+  table{border-collapse:collapse;width:100%;background:var(--card);border:1px solid var(--border-soft);border-radius:12px;overflow:hidden;font-size:15px;}
+  th,td{padding:11px 16px;text-align:left;border-bottom:1px solid var(--border-soft);}
+  th{background:var(--navy-3);color:var(--text-soft);font-weight:600;font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;}
+  tr:last-child td{border-bottom:none;}
+  td b{color:#fff;}
+  .pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12.5px;font-weight:600;}
+  .p-baja{background:var(--green-soft);color:#86efac;}
+  .p-media{background:var(--amber-soft);color:#fcd34d;}
+  .p-alta{background:var(--red-soft);color:#fca5a5;}
+
+  .note{
+    margin-top:16px; padding:12px 16px; border-left:3px solid var(--brand);
+    background:var(--brand-soft); border-radius:0 10px 10px 0; font-size:14px; color:var(--text);
+  }
+  .note.amber{border-color:var(--amber);background:var(--amber-soft);}
+  .note b{color:#fff;}
+  code{background:var(--navy-3);border:1px solid var(--border);border-radius:6px;padding:1px 7px;font-size:.92em;color:#c7d2fe;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;}
+
+  .cover-meta{margin-top:26px;display:flex;flex-wrap:wrap;gap:10px;}
+  .cover-meta .chip{border:1px solid var(--border);border-radius:999px;padding:7px 15px;font-size:13px;color:var(--text-soft);}
+  .cover-meta .chip b{color:#fff;}
+
+  /* ---- Controles inferiores ---- */
+  .controls{
+    position:fixed; bottom:0; left:0; right:0; height:64px; z-index:30;
+    display:flex; align-items:center; gap:16px; padding:0 20px;
+    background:rgba(15,23,42,.72); backdrop-filter:blur(8px);
+    border-top:1px solid var(--border-soft);
+  }
+  .nav-btn{
+    width:38px;height:38px;border-radius:10px;border:1px solid var(--border);
+    background:var(--card);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;
+  }
+  .nav-btn:hover:not(:disabled){border-color:var(--brand);color:#fff;background:var(--brand-soft);}
+  .nav-btn:disabled{opacity:.35;cursor:not-allowed;}
+  .counter{font-size:13px;color:var(--text-soft);font-variant-numeric:tabular-nums;min-width:52px;text-align:center;}
+  .dots{display:flex;gap:7px;flex:1;justify-content:center;flex-wrap:wrap;}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--border);border:none;cursor:pointer;padding:0;transition:.15s;}
+  .dot:hover{background:var(--muted);}
+  .dot.active{background:var(--brand);transform:scale(1.25);}
+  .progress{position:fixed;top:52px;left:0;height:2px;background:var(--brand);z-index:31;transition:width .35s ease;box-shadow:0 0 8px var(--brand);}
+  .hint{font-size:12px;color:var(--muted);white-space:nowrap;}
+
+  @media (max-width:720px){
+    .grid.two{grid-template-columns:1fr;}
+    .bar-title span{display:none;}
+    .hint{display:none;}
+    .stage{padding:16px;}
+    .dots{display:none;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="progress" id="progress"></div>
+
+  <header class="bar">
+    <div class="badge">Tt</div>
+    <div class="bar-title"><b>Manual GLPI — Resumen</b><span>Trantor Technologies · Service Desk</span></div>
+    <div class="bar-spacer"></div>
+    <a href="index.html">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2V5z M19 3v18"/></svg>
+      Manual completo
+    </a>
+  </header>
+
+  <main class="stage" id="stage">
+
+    <!-- 1 · Portada -->
+    <section class="slide active">
+      <div class="kicker">Resumen ejecutivo</div>
+      <h1>Operar GLPI como<br>agente de Mesa de Ayuda</h1>
+      <p class="lead">Lo esencial para registrar, clasificar, asignar y dar seguimiento a tickets bajo un mismo criterio. El detalle vive en el manual completo.</p>
+      <div class="cover-meta">
+        <span class="chip">Perfil <b>MAC</b></span>
+        <span class="chip">Soporte en sitio <b>N2</b></span>
+        <span class="chip">16 diapositivas</span>
+        <span class="chip">helpdesk.trantortechnologies.mx</span>
+      </div>
+      <div class="note">Usa <b>← →</b> o <b>barra espaciadora</b> para avanzar · <b>F</b> pantalla completa.</div>
+    </section>
+
+    <!-- 2 · Rol del MAC -->
+    <section class="slide">
+      <div class="kicker">El punto de partida</div>
+      <h2>El rol del agente MAC</h2>
+      <ul class="points">
+        <li><b>GLPI es la fuente única de verdad.</b> Si no está en el ticket, no sucedió.</li>
+        <li>El MAC <b>registra, clasifica, asigna y da seguimiento</b>. No atiende en sitio.</li>
+        <li>Quien resuelve en campo es el <b>IDS</b> (Ingeniero de Servicio), vía coordinador.</li>
+        <li>Es el <b>punto de control y despacho</b>: la calidad del registro define que el ticket llegue bien y a tiempo.</li>
+      </ul>
+    </section>
+
+    <!-- 3 · Conceptos -->
+    <section class="slide">
+      <div class="kicker">ITIL en la práctica</div>
+      <h2>Cuatro conceptos que definen todo</h2>
+      <div class="grid two">
+        <div class="cardbox"><h3>Incidencia vs. Solicitud</h3><p>Incidencia = algo falló (restablecer). Solicitud = petición estándar prevista (cumplir). Define la ruta y el SLA.</p></div>
+        <div class="cardbox"><h3>Prioridad</h3><p>Impacto × Urgencia mediante matriz. <b>La calcula GLPI</b>, no se pone a ojo.</p></div>
+        <div class="cardbox"><h3>SLA</h3><p>Compromiso de tiempo de respuesta y solución. Depende del <b>tipo</b> del ticket.</p></div>
+        <div class="cardbox"><h3>Escalación</h3><p>Elevar a un nivel superior. Escalar a tiempo es <b>buena práctica, no falla</b>.</p></div>
+      </div>
+    </section>
+
+    <!-- 4 · Flujo -->
+    <section class="slide">
+      <div class="kicker">De extremo a extremo</div>
+      <h2>El flujo del agente en 5 pasos</h2>
+      <div class="flow">
+        <div class="step"><div class="n">1</div><b>Recibir</b><span>Solicitud del área o líder de proyecto.</span></div>
+        <div class="step"><div class="n">2</div><b>Registrar</b><span>Crear y clasificar el ticket en GLPI.</span></div>
+        <div class="step"><div class="n">3</div><b>Asignar</b><span>Al coordinador, o automático por categoría.</span></div>
+        <div class="step"><div class="n">4</div><b>Reabrir</b><span>Validar y llenar los campos personalizados.</span></div>
+        <div class="step"><div class="n">5</div><b>Seguir</b><span>Dar seguimiento hasta dejarlo en Resuelto.</span></div>
+      </div>
+      <div class="note">La <b>clasificación</b> del paso 2 es la decisión que arrastra todo lo demás.</div>
+    </section>
+
+    <!-- 5 · Estados -->
+    <section class="slide">
+      <div class="kicker">Ciclo de vida</div>
+      <h2>Estados que usa el MAC</h2>
+      <div class="chain">
+        <span class="st">En curso (asignada)</span><span class="arr">→</span>
+        <span class="st">En curso (planificada)</span><span class="arr">→</span>
+        <span class="st">En espera</span><span class="arr">→</span>
+        <span class="st">Resuelto</span><span class="arr">→</span>
+        <span class="st auto">Cerrado · auto 48 h</span>
+      </div>
+      <ul class="points">
+        <li>El ticket <b>nace</b> siempre en <b>En curso (asignada)</b>.</li>
+        <li>El agente <b>resuelve, pero nunca cierra</b>: GLPI cierra solo a las 48 h en Resuelto.</li>
+      </ul>
+    </section>
+
+    <!-- 6 · Campos clave -->
+    <section class="slide">
+      <div class="kicker">Creación del ticket</div>
+      <h2>Campos que no se equivocan</h2>
+      <div class="grid two">
+        <div class="cardbox"><h3>Título</h3><p><code>CLIENTE - SUCURSAL - DESCRIPCIÓN</code>, todo en mayúsculas. Sin sucursal física, se usa la convención de la categoría.</p></div>
+        <div class="cardbox"><h3>Fecha de apertura</h3><p>Manual: la de la solicitud o, si no hay, la del correo. <b>Nunca por default</b> — es la base del SLA.</p></div>
+        <div class="cardbox"><h3>Tipo</h3><p>Incidente o Solicitud. Activa automáticamente el SLA correcto.</p></div>
+        <div class="cardbox"><h3>Categoría</h3><p>La hoja correcta del árbol. <b>Dispara reglas</b> de asignación y servicio: verifícala.</p></div>
+        <div class="cardbox"><h3>ID Externo</h3><p>Número del cliente, o <code>NO PROPORCIONADO</code> / <code>NO APLICA</code>. Obligatorio.</p></div>
+        <div class="cardbox"><h3>Solicitante / Observador</h3><p>Solicitante = el propio agente MAC. Observador = <b>vacío</b>.</p></div>
+      </div>
+    </section>
+
+    <!-- 7 · Matriz de prioridad -->
+    <section class="slide">
+      <div class="kicker">La calcula GLPI</div>
+      <h2>Matriz de prioridad</h2>
+      <table>
+        <thead><tr><th>Urgencia ＼ Impacto</th><th>Bajo</th><th>Medio</th><th>Alto</th></tr></thead>
+        <tbody>
+          <tr><td><b>Alta</b></td><td><span class="pill p-media">Media</span></td><td><span class="pill p-alta">Alta</span></td><td><span class="pill p-alta">Alta</span></td></tr>
+          <tr><td><b>Media</b></td><td><span class="pill p-baja">Baja</span></td><td><span class="pill p-media">Media</span></td><td><span class="pill p-alta">Alta</span></td></tr>
+          <tr><td><b>Baja</b></td><td><span class="pill p-baja">Baja</span></td><td><span class="pill p-baja">Baja</span></td><td><span class="pill p-media">Media</span></td></tr>
+        </tbody>
+      </table>
+      <div class="note">El agente captura urgencia e impacto (Baja / Media / Alta); GLPI cruza y asigna la prioridad.</div>
+    </section>
+
+    <!-- 8 · Asignación -->
+    <section class="slide">
+      <div class="kicker">¿A quién va el ticket?</div>
+      <h2>Asignación: dos caminos</h2>
+      <div class="grid two">
+        <div class="cardbox">
+          <h3>Caso 1 <span class="tag blue">manual</span></h3>
+          <p>Mayoría de Clientes Externos. El agente asigna al <b>coordinador operativo</b> según el estado donde se dará el servicio.</p>
+        </div>
+        <div class="cardbox">
+          <h3>Caso 2 <span class="tag green">automático</span></h3>
+          <p>Categorías con responsable fijo. GLPI asigna solo por regla de negocio. El agente <b>no toca</b> "Asignado a".</p>
+        </div>
+      </div>
+      <div class="note">Si la categoría está bien elegida, la asignación funciona. Al reabrir, valida que se asignó a quien debía.</div>
+    </section>
+
+    <!-- 9 · Tabs -->
+    <section class="slide">
+      <div class="kicker">Campos personalizados</div>
+      <h2>Reabrir el ticket habilita las tabs</h2>
+      <p class="lead" style="margin-bottom:18px;">Se llena <b>solo la tab de la categoría</b> + la tab <b>IDS</b>. Nunca todas.</p>
+      <table>
+        <thead><tr><th>Categoría</th><th>Tab a completar</th><th>¿IDS?</th></tr></thead>
+        <tbody>
+          <tr><td>Clientes Externos</td><td><b>Clientes Externos</b></td><td>Sí</td></tr>
+          <tr><td>Áreas Internas (Lab., Sistemas, Doc., Serv. Int.)</td><td><b>Áreas Internas</b></td><td>Sí</td></tr>
+          <tr><td>Control de Envíos</td><td><b>Control de Envíos</b></td><td>Sí</td></tr>
+          <tr><td>Control de Activos</td><td><b>Control de Activos</b></td><td><span class="pill p-alta">No · única excepción</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 10 · Datos faltantes -->
+    <section class="slide">
+      <div class="kicker">Convenciones</div>
+      <h2>Cómo llenar datos faltantes</h2>
+      <ul class="points warn">
+        <li>Texto libre: <code>NO PROPORCIONADO</code> (debía ir) vs. <code>NO APLICA</code> (no corresponde). No se mezclan.</li>
+        <li><b>CC (centro de costos):</b> admite <code>NO PROPORCIONADO</code>, <b>nunca</b> <code>NO APLICA</code> — todo proyecto tiene uno.</li>
+        <li>Listas obligatorias (IDS, Equipo…): se seleccionan de la lista, no admiten convención.</li>
+        <li>¿Falta un valor en una lista? Se pide al administrador, <b>no se crea por cuenta propia</b>.</li>
+      </ul>
+    </section>
+
+    <!-- 11 · Seguimiento -->
+    <section class="slide">
+      <div class="kicker">Seguimiento</div>
+      <h2>Documentar con plantillas</h2>
+      <p class="lead" style="margin-bottom:18px;">Cada avance se registra con la plantilla que corresponde al momento del ticket. El botón define qué plantillas aparecen.</p>
+      <div class="grid two">
+        <div class="cardbox"><h3>Botón Responder</h3><p>Plantillas de <b>Seguimiento</b> y <b>Pendiente</b>. Para documentar avances o poner el ticket en espera.</p></div>
+        <div class="cardbox"><h3>Botón Resolver</h3><p>Plantillas de <b>Resolución</b> y <b>Cancelación</b>. Para dar por terminado el ticket.</p></div>
+      </div>
+      <div class="note">El agente MAC es <b>dueño del ticket</b>: no espera pasivo, persigue la información y deja constancia.</div>
+    </section>
+
+    <!-- 12 · Pausa SLA -->
+    <section class="slide">
+      <div class="kicker">Regla crítica</div>
+      <h2>Poner "En espera" = pausar el SLA</h2>
+      <ul class="points check">
+        <li>Para detener un ticket se aplica la <b>plantilla de Pendiente</b> (por cliente o por refacción).</li>
+        <li>Al aplicarla, <b>GLPI pausa automáticamente el reloj del SLA</b>. Hacerlo por fuera no lo pausa.</li>
+        <li>La propiedad <b>no se pausa</b>: hay que seguir persiguiendo la respuesta o la refacción.</li>
+      </ul>
+      <div class="note amber">Nunca se marca el pendiente a mano: siempre por plantilla, o el ticket sigue consumiendo SLA sin necesidad.</div>
+    </section>
+
+    <!-- 13 · Resolución -->
+    <section class="slide">
+      <div class="kicker">Cierre</div>
+      <h2>Resolver ≠ Cerrar</h2>
+      <ul class="points">
+        <li>Servicio restablecido → botón <b>Resolver</b> + plantilla de Resolución (sin/con refacción o remota) → <b>Resuelto</b>.</li>
+        <li>Deja constancia de pasos, fechas de inicio/término y visto bueno del usuario.</li>
+        <li><b>El agente resuelve, nunca cierra.</b> GLPI cierra automáticamente a las 48 h.</li>
+        <li>Casos que no proceden: se Resuelve con plantilla de <b>Cancelación</b> o <b>Resolución arbitraria</b>.</li>
+      </ul>
+    </section>
+
+    <!-- 14 · SLA -->
+    <section class="slide">
+      <div class="kicker">Automático por tipo · calendario 5×8</div>
+      <h2>SLA estándar vigente</h2>
+      <table>
+        <thead><tr><th>Tipo</th><th>Asignación (TTO)</th><th>Solución (TTR)</th></tr></thead>
+        <tbody>
+          <tr><td><b>Incidente</b></td><td>3 horas</td><td>10 horas</td></tr>
+          <tr><td><b>Solicitud</b></td><td>6 horas</td><td>30 horas</td></tr>
+        </tbody>
+      </table>
+      <div class="note">El reloj corre en horario hábil (5 días × 8 h). El <b>tipo</b> y la <b>fecha de apertura</b> que captura el agente deciden si se cumple.</div>
+    </section>
+
+    <!-- 15 · Escalación -->
+    <section class="slide">
+      <div class="kicker">En orden, sin saltos</div>
+      <h2>Rutas de escalación</h2>
+      <div class="flow">
+        <div class="step"><div class="n">1</div><b>Nivel 1</b><span>Responsable directo: coordinador regional (CE dinámico) o la persona fija de la categoría.</span></div>
+        <div class="step"><div class="n">2</div><b>Nivel 2</b><span>Gerente o responsable superior de la categoría (DTN / DTS, Gerencia).</span></div>
+        <div class="step"><div class="n">3</div><b>Nivel 3</b><span>Dirección correspondiente (Operaciones). En Administración no aplica N3.</span></div>
+      </div>
+      <div class="note">Se sube al siguiente nivel solo cuando el anterior no respondió en un tiempo razonable o el SLA está en riesgo.</div>
+    </section>
+
+    <!-- 16 · Reglas de oro -->
+    <section class="slide">
+      <div class="kicker">Para llevar</div>
+      <h2>Reglas de oro</h2>
+      <ul class="points check">
+        <li>Título en mayúsculas con nomenclatura · fecha de apertura manual.</li>
+        <li>Categoría bien elegida = reglas de negocio correctas.</li>
+        <li>Reabrir siempre: validar categoría y asignación antes de cerrar el registro.</li>
+        <li>Poner en espera solo con plantilla de Pendiente · el agente nunca cierra.</li>
+      </ul>
+      <div class="note"><b>Administrador de la plataforma</b> (accesos, altas en listas): Juan Carlos Pérez Salgado · jperez@trantortechnologies.mx</div>
+    </section>
+
+  </main>
+
+  <footer class="controls">
+    <button class="nav-btn" id="prev" aria-label="Anterior">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <span class="counter" id="counter">1 / 16</span>
+    <div class="dots" id="dots"></div>
+    <span class="hint">← → avanzar · F pantalla completa</span>
+    <button class="nav-btn" id="next" aria-label="Siguiente">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+  </footer>
+
+<script>
+(() => {
+  "use strict";
+  const slides = [...document.querySelectorAll(".slide")];
+  const total = slides.length;
+  const counter = document.getElementById("counter");
+  const progress = document.getElementById("progress");
+  const dotsWrap = document.getElementById("dots");
+  const prevBtn = document.getElementById("prev");
+  const nextBtn = document.getElementById("next");
+  let i = Math.min(total - 1, Math.max(0, (parseInt(location.hash.slice(1), 10) || 1) - 1));
+
+  slides.forEach((_, n) => {
+    const b = document.createElement("button");
+    b.className = "dot";
+    b.setAttribute("aria-label", "Ir a la diapositiva " + (n + 1));
+    b.addEventListener("click", () => go(n));
+    dotsWrap.appendChild(b);
+  });
+  const dots = [...dotsWrap.children];
+
+  function render() {
+    slides.forEach((s, n) => s.classList.toggle("active", n === i));
+    dots.forEach((d, n) => d.classList.toggle("active", n === i));
+    counter.textContent = (i + 1) + " / " + total;
+    progress.style.width = ((i + 1) / total * 100) + "%";
+    prevBtn.disabled = i === 0;
+    nextBtn.disabled = i === total - 1;
+    history.replaceState(null, "", "#" + (i + 1));
+  }
+  function go(n) { i = Math.max(0, Math.min(total - 1, n)); render(); }
+
+  prevBtn.addEventListener("click", () => go(i - 1));
+  nextBtn.addEventListener("click", () => go(i + 1));
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") { e.preventDefault(); go(i + 1); }
+    else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); go(i - 1); }
+    else if (e.key === "Home") { go(0); }
+    else if (e.key === "End") { go(total - 1); }
+    else if (e.key === "f" || e.key === "F") {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+      else document.exitFullscreen?.();
+    }
+  });
+
+  // Swipe en táctil
+  let x0 = null;
+  document.getElementById("stage").addEventListener("touchstart", (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+  document.getElementById("stage").addEventListener("touchend", (e) => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 50) go(i + (dx < 0 ? 1 : -1));
+    x0 = null;
+  }, { passive: true });
+
+  render();
+})();
+</script>
+</body>
+</html>
