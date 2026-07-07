@@ -32,7 +32,7 @@ Lectura rápida: los incidentes tienen tiempos más cortos que las solicitudes, 
  
 El reloj del SLA corre sobre un **calendario de horario hábil (5x8)**: cinco días a la semana, ocho horas por día. No corre las 24 horas ni en fines de semana o días no laborables. Es decir, si un ticket entra fuera del horario hábil, el tiempo empieza a contar cuando inicia la siguiente jornada.
  
-> Nota: la ventana exacta del calendario 5x8 (hora de inicio y fin, días festivos considerados) está definida en la configuración de GLPI. Confirmar con el administrador si se requiere el detalle.
+> Nota: la ventana exacta del calendario 5x8 (hora de inicio y fin, días festivos considerados) está definida en la configuración de GLPI.
  
 ## Alcance de este estándar
  

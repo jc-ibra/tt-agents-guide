@@ -140,8 +140,6 @@ El agente MAC trabaja únicamente con tres niveles de urgencia, impacto y priori
  
 Cómo leerla: el agente elige la urgencia (fila) y el impacto (columna); la celda donde se cruzan es la prioridad que GLPI asignará. Por ejemplo, urgencia Alta con impacto Medio da prioridad Alta.
  
-> Nota: los tres niveles deben coincidir con la configuración de la instancia de GLPI de Trantor Technologies.
- 
 ### ID Externo
  
 Campo obligatorio. Es el **número de ticket del cliente final** en su propio sistema.

@@ -47,7 +47,7 @@ Esta tabla concentra, por categoría, todo lo que el agente MAC necesita para re
 |---|---|---|---|---|---|
 | OP > AI > Laboratorio | Ambas | Laboratorio | Auto: Raúl López Balbuena | Áreas Internas | Sí |
 | OP > AI > Sistemas Internos | Ambas | Sistemas Internos | Auto: Fernando Zárate Delgadillo | Áreas Internas | Sí |
-| OP > AI > Documentación Interna | Solo solicitud | Documentación Interna | Coordinador por estado (verificar) | Áreas Internas | Sí |
+| OP > AI > Documentación Interna | Solo solicitud | Documentación Interna | Coordinador por estado | Áreas Internas | Sí |
  
 ## Rama AD (Administración)
  
@@ -63,7 +63,6 @@ Esta tabla concentra, por categoría, todo lo que el agente MAC necesita para re
  
 - **Nodos padre no seleccionables:** OP, AD, CE, AI, y los nodos de cliente que solo agrupan (por ejemplo Actinver, Afirme, Sellcom BBVA, Symetry como nodo) no se seleccionan directamente. El agente elige siempre la categoría hoja más específica.
 - **Viáticos y Personal:** en esta fase el agente MAC no crea tickets de estas categorías (se gestionarán mediante formularios más adelante). Sí puede darles seguimiento. Su detalle irá en un anexo posterior.
-- **Documentación Interna:** figura con asignación por coordinador de zona (dinámica). Conviene verificar este comportamiento con el administrador, ya que es una categoría interna y no una atención a cliente en sitio.
 - **Fuente:** esta tabla se construyó a partir del catálogo de categorías de GLPI, la matriz de responsables de asignación y la tabla de convenciones de SUCURSAL. Cualquier alta o cambio de categoría debe reflejarse aquí para mantenerla como referencia única.
 ---
  
