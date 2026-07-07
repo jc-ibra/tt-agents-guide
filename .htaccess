@@ -1,18 +1,17 @@
-# Este subdirectorio es un sitio estático (manual GLPI).
-# GLPI, en la raíz del dominio, reescribe todo hacia su router.
-# Apagamos esa reescritura heredada SOLO para esta carpeta.
+# El sitio (manual GLPI) vive dentro de /web/.
+# Al entrar a la raíz del subdominio, redirige a /web/.
 <IfModule mod_rewrite.c>
-  RewriteEngine Off
+  RewriteEngine On
+  RewriteRule ^$ /web/ [R=301,L]
 </IfModule>
 
-# Servir index.html al entrar a una carpeta.
 DirectoryIndex index.html index.htm
 
 # No exponer el repositorio git ni los archivos internos.
+RedirectMatch 404 /\.git
 <FilesMatch "^(CLAUDE\.md|CAPTURAS\.md)$">
   Require all denied
 </FilesMatch>
-RedirectMatch 404 /\.git
 
 # Tipos MIME correctos por si el server no los define.
 <IfModule mod_mime.c>
