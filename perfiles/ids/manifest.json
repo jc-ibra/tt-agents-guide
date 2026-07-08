@@ -1,0 +1,38 @@
+{
+  "site": {
+    "brand": "Trantor Technologies",
+    "subtitle": "Ingeniero de Servicio",
+    "title": "Manual de Uso de GLPI",
+    "platformUrl": "https://helpdesk.trantortechnologies.mx",
+    "contentBase": "docs"
+  },
+  "home": "00-indice",
+  "groups": [
+    {
+      "label": "Inicio",
+      "icon": "home",
+      "items": [
+        { "id": "00-indice", "file": "00-indice.md", "title": "Índice del manual", "icon": "book" }
+      ]
+    },
+    {
+      "label": "Manual",
+      "icon": "layers",
+      "items": [
+        { "id": "01-fundamentos", "file": "01-fundamentos.md", "title": "1. Fundamentos", "icon": "info" },
+        { "id": "02-primeros-pasos", "file": "02-primeros-pasos.md", "title": "2. Primeros pasos", "icon": "login" },
+        { "id": "03-gestion-tickets", "file": "03-gestion-tickets.md", "title": "3. Gestión de tickets", "icon": "ticket" },
+        { "id": "04-seguimiento-y-resolucion", "file": "04-seguimiento-y-resolucion.md", "title": "4. Seguimiento y resolución", "icon": "activity" }
+      ]
+    },
+    {
+      "label": "Anexos",
+      "icon": "bookmark",
+      "items": [
+        { "id": "anexo-a-guia-rapida", "file": "anexo-a-guia-rapida.md", "title": "A. Guía rápida IDS", "icon": "zap" },
+        { "id": "anexo-b-informacion-faltante", "file": "anexo-b-informacion-faltante.md", "title": "B. Información faltante", "icon": "help" },
+        { "id": "anexo-c-problemas-de-acceso", "file": "anexo-c-problemas-de-acceso.md", "title": "C. Problemas de acceso", "icon": "lock" }
+      ]
+    }
+  ]
+}

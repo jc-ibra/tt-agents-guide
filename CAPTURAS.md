@@ -1,55 +1,52 @@
-# Guía de capturas de pantalla — perfil Agente de Mesa de Ayuda (MAC)
+# Guía de capturas de pantalla — perfil Ingeniero de Servicio (IDS)
 
-Lista de screenshots que el manual del **Agente MAC** necesita. Toma cada captura
-en la instancia real de GLPI (`https://helpdesk.trantortechnologies.mx`) y
-**guárdala con el nombre exacto indicado** dentro de la carpeta:
+Lista de screenshots que el manual del **IDS** necesita. Toma cada captura
+en la instancia real de GLPI (`https://helpdesk.trantortechnologies.mx`), **desde
+la vista del perfil IDS**, y **guárdala con el nombre exacto indicado** dentro de
+la carpeta:
 
 ```
-perfiles/agente-mac/docs/capturas/
+perfiles/ids/docs/capturas/
 ```
 
-- Formato: **PNG**. Ancho recomendado: ~1600 px. Oculta datos sensibles reales
-  si es necesario (nombres/credenciales) usando una cuenta de prueba.
+- Formato: **PNG**. Ancho recomendado: ~1600 px (o captura de celular si la vista
+  es la de campo). Oculta datos sensibles reales (nombres/credenciales/direcciones)
+  usando una cuenta de prueba si es necesario.
 - El nombre del archivo debe ser idéntico al de la columna **Nombre de archivo**
   (minúsculas, sin espacios, con guiones).
 - Cuando una captura esté lista, marca su casilla `[x]`. Yo reemplazo el
-  marcador `> [Insertar captura: ...]` del documento por la imagen.
+  marcador `[CAPTURA: ...]` del documento por la imagen.
 
 ---
 
-## Parte 2 - Primeros pasos (`perfiles/agente-mac/docs/02-primeros-pasos.md`)
+## Parte 2 - Primeros pasos (`perfiles/ids/docs/02-primeros-pasos.md`)
 
 | ✔ | Nombre de archivo | Qué debe mostrar |
 |---|---|---|
-| [X] | `02-01-login-glpi.png` | Pantalla de inicio de sesión de GLPI (usuario y contraseña). |
-| [X] | `02-02-selector-perfil-mac.png` | Selector de perfil de la barra superior mostrando el perfil **MAC** activo. |
-| [X] | `02-03-tablero-mac.png` | Pantalla central / tablero del perfil MAC (contadores y accesos rápidos). |
-| [x] | `02-04-tickets-asignados.png` | Vista "Mis tickets" / tickets asignados al agente. |
+| [x] | `02-01-login-glpi.png` | Pantalla de inicio de sesión de GLPI (usuario y contraseña). §2.1 |
+| [x] | `02-02-menu-perfil-ids.png` | Menú principal / lateral de GLPI con las opciones visibles para el perfil **IDS** (Tablero, Tickets, Catálogo de servicios, Base de conocimientos). §2.2 |
+| [x] | `02-03-tablero-vista-personal.png` | Tablero, pestaña **Vista personal**, con el resumen de tickets (abiertos, resueltos, desfasados, cerrados). §2.3 |
+| [x] | `02-04-tickets-asignados.png` | Listado de tickets asignados dentro de **Soporte > Tickets**. §2.3 |
 
-## Parte 3 - Gestión de tickets: creación (`perfiles/agente-mac/docs/03-gestion-tickets.md`)
-
-| ✔ | Nombre de archivo | Qué debe mostrar |
-|---|---|---|
-| [x] | `03-01-formulario-creacion-ticket.png` | Formulario de creación de ticket (Soporte > Tickets > nuevo). |
-| [x] | `03-02-campo-asignado-a.png` | Campo **"Asignado a"** con un coordinador seleccionado. |
-| [x] | `03-03-menu-lateral-tabs.png` | Menú lateral del ticket con las tabs: Áreas Internas, Clientes Externos, Control de Activos, Control de Envíos e IDS. |
-| [x] | `03-04-tab-clientes-externos.png` | Tab **Clientes Externos** con sus campos. |
-| [x] | `03-05-tab-areas-internas.png` | Tab **Áreas Internas** con sus campos. |
-| [x] | `03-06-tab-control-activos.png` | Tab **Control de Activos** con sus campos. |
-| [x] | `03-07-tab-control-envios.png` | Tab **Control de Envíos** con sus campos. |
-| [x] | `03-08-tab-ids.png` | Tab **IDS** con Nombre y Número de empleado seleccionados. |
-
-## Parte 4 - Seguimiento (`perfiles/agente-mac/docs/04-seguimiento.md`)
+## Parte 3 - Gestión de tickets: recepción y lectura (`perfiles/ids/docs/03-gestion-tickets.md`)
 
 | ✔ | Nombre de archivo | Qué debe mostrar |
 |---|---|---|
-| [x] | `04-01-catalogo-plantillas.png` | Menú de plantillas de seguimiento desplegado desde el botón **Responder** (§4.3). |
-| [x] | `04-02-plantilla-pendiente-sla-pausado.png` | Ticket con una plantilla de **Pendiente** aplicada y el reloj del **SLA en pausa** (§4.4). |
-| [x] | `04-03-resolver-plantilla-resolucion.png` | Botón **Resolver** con una plantilla de **Resolución** seleccionada (§4.5). |
+| [x] | `03-01-ticket-vista-general.png` | Vista general de un ticket abierto, con los campos principales visibles (descripción, prioridad, estado, categoría). §3.2 |
+| [x] | `03-02-tabs-ticket-ids.png` | Tabs del ticket con la información personalizada visible para el perfil IDS (dirección/ubicación, usuario de contacto, datos del equipo). §3.3 |
+
+## Parte 4 - Seguimiento y resolución (`perfiles/ids/docs/04-seguimiento-y-resolucion.md`)
+
+| ✔ | Nombre de archivo | Qué debe mostrar |
+|---|---|---|
+| [x] | `04-01-menu-plantillas-responder.png` | Menú de plantillas de seguimiento desplegado desde el botón **Responder** (En camino, En sitio, Diagnosticado, Pendiente). §4.2 |
+| [ ] | `04-02-plantilla-campos-completados.png` | Ejemplo de una plantilla con los campos completados de forma específica (p. ej. Diagnosticado). §4.4 — ⚠️ **reemplazar**: el archivo subido es idéntico a 04-03 y 04-04 (un hilo de seguimientos, no una plantilla en edición). |
+| [ ] | `04-03-ticket-resuelto-conformidad.png` | Ticket resuelto con el formato de conformidad adjunto en GLPI. §4.6 — ⚠️ **reemplazar**: archivo duplicado (ver 04-02). Falta el ticket ya **resuelto** con el formato de conformidad adjunto. |
+| [ ] | `04-04-hilo-completo-seguimientos.png` | Hilo completo de seguimientos de un ticket resuelto, con todas las plantillas aplicadas en orden (En camino → En sitio → Diagnosticado → [Pendiente] → Resolución). §4.7 — ⚠️ **reemplazar**: archivo duplicado (ver 04-02). La imagen actual muestra el hilo en estado *En espera*, no resuelto. |
 
 ---
 
-**Total: 15 capturas.**
+**Total: 10 capturas.**
 
 > Sugerencia: puedes ir entregando capturas por partes. Cada una se integra en
 > cuanto la tengas, sin esperar a las demás.

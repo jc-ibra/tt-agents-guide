@@ -19,6 +19,8 @@
     box: 'M21 8l-9-5-9 5 9 5 9-5z M3 8v8l9 5 9-5V8',
     'home-2': 'M3 11l9-7 9 7M5 10v9h14v-9',
     camera: 'M4 8a2 2 0 012-2h2l1.5-2h5L18 6h2a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V8z M12 17a3.5 3.5 0 100-7 3.5 3.5 0 000 7z',
+    help: 'M12 22a10 10 0 100-20 10 10 0 000 20z M9.1 9a3 3 0 015.8 1c0 2-3 3-3 3 M12 17h.01',
+    lock: 'M5 11h14v10H5z M8 11V7a4 4 0 018 0v4',
   };
   const icon = (name, size = 16) =>
     `<svg class="nav-icon" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${ICONS[name] || 'M12 12h.01'}"/></svg>`;

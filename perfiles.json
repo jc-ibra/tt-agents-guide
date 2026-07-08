@@ -22,7 +22,7 @@
       "sigla": "IDS",
       "resumen": "Resolver en sitio los tickets asignados, documentar la atención y actualizar el estado del servicio.",
       "icon": "wrench",
-      "estado": "construccion",
+      "estado": "disponible",
       "url": "perfiles/ids/"
     },
     {

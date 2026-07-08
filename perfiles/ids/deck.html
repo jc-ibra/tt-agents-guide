@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Resumen · Manual GLPI para IDS - Trantor Technologies</title>
+<link rel="icon" type="image/png" href="docs/assets/favicon.png" />
+<style>
+  :root{
+    --navy:#0f172a; --navy-2:#1e293b; --navy-3:#172033;
+    --card:#1e293b; --border:#334155; --border-soft:#293548;
+    --text:#e2e8f0; --text-soft:#94a3b8; --muted:#64748b;
+    --brand:#3b82f6; --brand-2:#2563eb; --brand-soft:rgba(59,130,246,.14);
+    --green:#22c55e; --green-soft:rgba(34,197,94,.14);
+    --amber:#f59e0b; --amber-soft:rgba(245,158,11,.14);
+    --red:#f87171; --red-soft:rgba(248,113,113,.13);
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    font-family:var(--font); color:var(--text);
+    background:radial-gradient(1200px 600px at 80% -10%,#1c2b4a 0%,transparent 55%),var(--navy);
+    overflow:hidden;
+  }
+
+  /* ---- Barra superior fija ---- */
+  .bar{
+    position:fixed; top:0; left:0; right:0; height:52px; z-index:30;
+    display:flex; align-items:center; gap:12px; padding:0 20px;
+    background:rgba(15,23,42,.72); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border-soft);
+  }
+  .badge{
+    width:30px;height:30px;border-radius:50%;
+    background:linear-gradient(135deg,#3b82f6,#1e3a8a);
+    color:#fff;font-weight:700;font-size:12px;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 0 0 3px rgba(59,130,246,.18);
+  }
+  .bar-title{display:flex;flex-direction:column;line-height:1.15;}
+  .bar-title b{font-size:14px;color:#fff;font-weight:600;}
+  .bar-title span{font-size:10.5px;color:var(--text-soft);letter-spacing:.06em;text-transform:uppercase;}
+  .bar-spacer{flex:1;}
+  .bar a{
+    color:var(--text-soft); text-decoration:none; font-size:13px;
+    border:1px solid var(--border); padding:6px 12px; border-radius:8px;
+    display:inline-flex; align-items:center; gap:6px; transition:.15s;
+  }
+  .bar a:hover{color:#fff;border-color:var(--brand);background:var(--brand-soft);}
+
+  /* ---- Escenario de diapositivas ---- */
+  .stage{position:fixed; inset:52px 0 64px; display:flex; align-items:center; justify-content:center; padding:24px;}
+  .slide{
+    display:none; width:100%; max-width:960px; max-height:100%;
+    animation:in .45s cubic-bezier(.2,.7,.2,1);
+  }
+  .slide.active{display:block;}
+  @keyframes in{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+
+  .kicker{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--brand); font-weight:600; margin-bottom:14px;
+  }
+  .kicker::before{content:"";width:22px;height:2px;background:var(--brand);border-radius:2px;}
+  h1{font-size:clamp(28px,4.4vw,46px);line-height:1.08;margin:0 0 16px;color:#fff;letter-spacing:-.02em;}
+  h2{font-size:clamp(22px,3.2vw,34px);line-height:1.12;margin:0 0 22px;color:#fff;letter-spacing:-.01em;}
+  .lead{font-size:clamp(15px,1.7vw,19px);color:var(--text-soft);max-width:640px;line-height:1.55;}
+
+  ul.points{list-style:none;padding:0;margin:0;display:grid;gap:12px;}
+  ul.points li{
+    position:relative; padding:14px 16px 14px 46px;
+    background:var(--card); border:1px solid var(--border-soft); border-radius:12px;
+    font-size:clamp(14px,1.55vw,16.5px); line-height:1.5;
+  }
+  ul.points li b{color:#fff;}
+  ul.points li::before{
+    content:""; position:absolute; left:16px; top:50%; transform:translateY(-50%);
+    width:16px;height:16px;border-radius:50%;
+    background:var(--brand-soft); border:2px solid var(--brand);
+  }
+  ul.points.check li::before{
+    border-color:var(--green); background:var(--green-soft);
+  }
+  ul.points.warn li::before{
+    border-color:var(--amber); background:var(--amber-soft);
+  }
+
+  .grid{display:grid;gap:12px;}
+  .grid.two{grid-template-columns:1fr 1fr;}
+  .cardbox{
+    background:var(--card);border:1px solid var(--border-soft);border-radius:14px;padding:18px 20px;
+  }
+  .cardbox h3{margin:0 0 10px;font-size:15px;color:#fff;display:flex;align-items:center;gap:8px;}
+  .cardbox h3 .tag{font-size:11px;font-weight:600;letter-spacing:.04em;padding:2px 8px;border-radius:999px;}
+  .tag.blue{background:var(--brand-soft);color:#93c5fd;}
+  .tag.green{background:var(--green-soft);color:#86efac;}
+  .tag.amber{background:var(--amber-soft);color:#fcd34d;}
+  .cardbox p{margin:0;color:var(--text-soft);font-size:14px;line-height:1.5;}
+  .cardbox ul{margin:8px 0 0;padding-left:18px;color:var(--text-soft);font-size:13.5px;line-height:1.55;}
+  .cardbox ul li{margin-bottom:4px;}
+
+  /* Flujo de pasos */
+  .flow{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch;}
+  .flow .step{
+    flex:1; min-width:150px; background:var(--card); border:1px solid var(--border-soft);
+    border-radius:12px; padding:14px 14px 14px 14px; position:relative;
+  }
+  .flow .step .n{
+    width:26px;height:26px;border-radius:50%;background:var(--brand);color:#fff;
+    font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;
+  }
+  .flow .step b{color:#fff;font-size:14px;display:block;margin-bottom:2px;}
+  .flow .step span{color:var(--text-soft);font-size:12.5px;line-height:1.4;}
+
+  /* Cadena de estados */
+  .chain{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:16px;}
+  .chain .st{background:var(--card);border:1px solid var(--border);border-radius:999px;padding:8px 16px;font-size:14px;color:#fff;font-weight:500;}
+  .chain .arr{color:var(--brand);font-weight:700;}
+  .chain .auto{background:var(--amber-soft);border-color:transparent;color:#fcd34d;}
+
+  /* Tablas */
+  table{border-collapse:collapse;width:100%;background:var(--card);border:1px solid var(--border-soft);border-radius:12px;overflow:hidden;font-size:15px;}
+  th,td{padding:11px 16px;text-align:left;border-bottom:1px solid var(--border-soft);}
+  th{background:var(--navy-3);color:var(--text-soft);font-weight:600;font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;}
+  tr:last-child td{border-bottom:none;}
+  td b{color:#fff;}
+  .pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12.5px;font-weight:600;}
+  .p-baja{background:var(--green-soft);color:#86efac;}
+  .p-media{background:var(--amber-soft);color:#fcd34d;}
+  .p-alta{background:var(--red-soft);color:#fca5a5;}
+
+  .note{
+    margin-top:16px; padding:12px 16px; border-left:3px solid var(--brand);
+    background:var(--brand-soft); border-radius:0 10px 10px 0; font-size:14px; color:var(--text);
+  }
+  .note.amber{border-color:var(--amber);background:var(--amber-soft);}
+  .note.green{border-color:var(--green);background:var(--green-soft);}
+  .note b{color:#fff;}
+  code{background:var(--navy-3);border:1px solid var(--border);border-radius:6px;padding:1px 7px;font-size:.92em;color:#c7d2fe;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;}
+
+  /* Comparativa correcto / incorrecto */
+  .vs{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .vs .box{border-radius:12px;padding:14px 16px;font-size:14px;line-height:1.5;border:1px solid var(--border-soft);}
+  .vs .bad{background:var(--red-soft);border-color:rgba(248,113,113,.35);}
+  .vs .good{background:var(--green-soft);border-color:rgba(34,197,94,.35);}
+  .vs .box .lbl{display:block;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;margin-bottom:7px;}
+  .vs .bad .lbl{color:#fca5a5;}
+  .vs .good .lbl{color:#86efac;}
+  .vs .box p{margin:0;color:var(--text);}
+
+  /* Timeline del ejemplo */
+  .timeline{display:grid;gap:8px;}
+  .timeline .tl{
+    display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;
+    background:var(--card);border:1px solid var(--border-soft);border-radius:12px;padding:11px 14px;
+  }
+  .timeline .tl .tg{font-size:12px;font-weight:600;color:#93c5fd;background:var(--brand-soft);padding:3px 10px;border-radius:999px;white-space:nowrap;}
+  .timeline .tl.res .tg{color:#86efac;background:var(--green-soft);}
+  .timeline .tl.pend .tg{color:#fcd34d;background:var(--amber-soft);}
+  .timeline .tl p{margin:0;color:var(--text-soft);font-size:13.5px;line-height:1.45;}
+
+  .cover-meta{margin-top:26px;display:flex;flex-wrap:wrap;gap:10px;}
+  .cover-meta .chip{border:1px solid var(--border);border-radius:999px;padding:7px 15px;font-size:13px;color:var(--text-soft);}
+  .cover-meta .chip b{color:#fff;}
+
+  /* ---- Controles inferiores ---- */
+  .controls{
+    position:fixed; bottom:0; left:0; right:0; height:64px; z-index:30;
+    display:flex; align-items:center; gap:16px; padding:0 20px;
+    background:rgba(15,23,42,.72); backdrop-filter:blur(8px);
+    border-top:1px solid var(--border-soft);
+  }
+  .nav-btn{
+    width:38px;height:38px;border-radius:10px;border:1px solid var(--border);
+    background:var(--card);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;
+  }
+  .nav-btn:hover:not(:disabled){border-color:var(--brand);color:#fff;background:var(--brand-soft);}
+  .nav-btn:disabled{opacity:.35;cursor:not-allowed;}
+  .counter{font-size:13px;color:var(--text-soft);font-variant-numeric:tabular-nums;min-width:52px;text-align:center;}
+  .dots{display:flex;gap:7px;flex:1;justify-content:center;flex-wrap:wrap;}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--border);border:none;cursor:pointer;padding:0;transition:.15s;}
+  .dot:hover{background:var(--muted);}
+  .dot.active{background:var(--brand);transform:scale(1.25);}
+  .progress{position:fixed;top:52px;left:0;height:2px;background:var(--brand);z-index:31;transition:width .35s ease;box-shadow:0 0 8px var(--brand);}
+  .hint{font-size:12px;color:var(--muted);white-space:nowrap;}
+
+  @media (max-width:720px){
+    .grid.two{grid-template-columns:1fr;}
+    .vs{grid-template-columns:1fr;}
+    .bar-title span{display:none;}
+    .hint{display:none;}
+    .stage{padding:16px;}
+    .dots{display:none;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="progress" id="progress"></div>
+
+  <header class="bar">
+    <div class="badge">Tt</div>
+    <div class="bar-title"><b>Manual GLPI · IDS - Resumen</b><span>Trantor Technologies · Service Desk</span></div>
+    <div class="bar-spacer"></div>
+    <a href="index.html">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2V5z M19 3v18"/></svg>
+      Manual completo
+    </a>
+  </header>
+
+  <main class="stage" id="stage">
+
+    <!-- 1 · Portada -->
+    <section class="slide active">
+      <div class="kicker">Resumen ejecutivo</div>
+      <h1>Operar GLPI como<br>Ingeniero de Servicio</h1>
+      <p class="lead">Lo esencial para consultar tus tickets asignados, leer bien la información y documentar cada etapa de tu atención en sitio. El detalle vive en el manual completo.</p>
+      <div class="cover-meta">
+        <span class="chip">Perfil <b>IDS</b></span>
+        <span class="chip">Atención en sitio <b>N2</b></span>
+        <span class="chip">16 diapositivas</span>
+        <span class="chip">helpdesk.trantortechnologies.mx</span>
+      </div>
+      <div class="note">Usa <b>← →</b> o <b>barra espaciadora</b> para avanzar · <b>F</b> pantalla completa.</div>
+    </section>
+
+    <!-- 2 · Rol del IDS -->
+    <section class="slide">
+      <div class="kicker">El punto de partida</div>
+      <h2>Tu rol dentro del flujo</h2>
+      <ul class="points">
+        <li>Un ticket <b>no nace contigo</b>, pero tú eres quien lo resuelve frente al cliente.</li>
+        <li>Tu trabajo es la <b>atención en sitio</b>: lo que en la operación se conoce como <b>nivel 2 (N2)</b>.</li>
+        <li>Lo que registras en GLPI durante ese proceso es la <b>evidencia oficial</b> de tu servicio.</li>
+        <li>Regla base para todo el equipo: <b>si no está en el ticket, no sucedió.</b></li>
+      </ul>
+    </section>
+
+    <!-- 3 · Recorrido del ticket -->
+    <section class="slide">
+      <div class="kicker">De extremo a extremo</div>
+      <h2>El recorrido del ticket</h2>
+      <div class="flow">
+        <div class="step"><div class="n">1</div><b>Solicita</b><span>El cliente o área pide un servicio.</span></div>
+        <div class="step"><div class="n">2</div><b>MAC registra</b><span>Crea y clasifica el ticket en GLPI.</span></div>
+        <div class="step"><div class="n">3</div><b>Coordinador asigna</b><span>Revisa el ticket y te lo asigna a ti.</span></div>
+        <div class="step"><div class="n">4</div><b>Tú resuelves</b><span>Vas a sitio, diagnosticas y documentas.</span></div>
+        <div class="step"><div class="n">5</div><b>MAC sigue</b><span>Da seguimiento hasta restablecer el servicio.</span></div>
+      </div>
+      <div class="note">Aunque tu coordinador ya te haya adelantado el caso, <b>siempre entra al ticket antes de moverte a sitio</b>: ahí está la información completa.</div>
+    </section>
+
+    <!-- 4 · SLA, prioridad, escalación -->
+    <section class="slide">
+      <div class="kicker">Lo que debes tener claro</div>
+      <h2>SLA, prioridad y escalación</h2>
+      <div class="grid two">
+        <div class="cardbox"><h3>SLA</h3><p>Compromiso de tiempo que <b>ya corre en segundo plano</b> desde que el ticket se registró. Documentar tu avance rápido le da control a la operación.</p></div>
+        <div class="cardbox"><h3>Prioridad</h3><p>Viene <b>ya definida</b> (la calculó GLPI). Tú no la modificas, pero prioridad alta = actuar y documentar más rápido.</p></div>
+        <div class="cardbox"><h3>Escalación</h3><p>Avisar a un nivel con más decisión cuando algo te bloquea en sitio. <b>Escalar a tiempo no es falla</b>, es parte del trabajo.</p></div>
+        <div class="cardbox"><h3>Si algo detiene el ticket</h3><p>Cuando el freno no depende de ti (p. ej. una refacción), hay una forma correcta de registrarlo <b>para que el SLA se pause</b>.</p></div>
+      </div>
+    </section>
+
+    <!-- 5 · Primeros pasos -->
+    <section class="slide">
+      <div class="kicker">Primeros pasos</div>
+      <h2>Acceso y perfil restringido</h2>
+      <ul class="points">
+        <li>Ingresas desde <code>helpdesk.trantortechnologies.mx</code>. En campo, tu acceso principal es el <b>celular</b>.</li>
+        <li>Tu perfil solo muestra: <b>Tablero, Tickets, Catálogo de servicios y Base de conocimientos</b>. Es intencional, para enfocarte en tus tickets.</li>
+        <li><b>No modificas</b> la información general que capturó MAC, pero <b>sí agregas tus seguimientos</b> con plantillas.</li>
+        <li>¿Olvidaste la contraseña? No la recuperas por tu cuenta: la pides a <b>MAC o tu coordinador</b>.</li>
+      </ul>
+    </section>
+
+    <!-- 6 · Llegar a tus tickets -->
+    <section class="slide">
+      <div class="kicker">Tus dos vistas</div>
+      <h2>Cómo llegar a tus tickets</h2>
+      <div class="grid two">
+        <div class="cardbox">
+          <h3>Vista rápida <span class="tag blue">Tablero</span></h3>
+          <p>En <b>Inicio &gt; Vista personal</b>: resumen de tus tickets (abiertos, resueltos, desfasados, cerrados). Da clic en un indicador para entrar directo al ticket.</p>
+        </div>
+        <div class="cardbox">
+          <h3>Vista de trabajo <span class="tag green">Tickets</span></h3>
+          <p>En <b>Soporte &gt; Tickets</b>: listado completo de los tickets asignados a ti, sin filtros. Es tu lista de trabajo diaria.</p>
+        </div>
+      </div>
+      <div class="note">El Tablero da panorama al iniciar la jornada; <b>Soporte &gt; Tickets</b> es donde entras a cada caso a trabajar.</div>
+    </section>
+
+    <!-- 7 · Leer un ticket -->
+    <section class="slide">
+      <div class="kicker">Antes de trasladarte</div>
+      <h2>Cómo leer un ticket asignado</h2>
+      <p class="lead" style="margin-bottom:18px;">Tómate el tiempo de revisar <b>toda</b> la información, no solo el título o la descripción. Cada campo que capturó MAC te da contexto.</p>
+      <div class="grid two">
+        <div class="cardbox"><h3>Descripción</h3><p>Qué reportó el usuario, qué falla o qué se solicita.</p></div>
+        <div class="cardbox"><h3>Prioridad</h3><p>Qué tan rápido necesitas actuar y documentar.</p></div>
+        <div class="cardbox"><h3>Estado</h3><p>En qué etapa va el ticket.</p></div>
+        <div class="cardbox"><h3>Categoría</h3><p>El tipo de servicio que vas a atender.</p></div>
+      </div>
+      <div class="note">Leer bien antes de salir te evita llegar sin contexto o con la herramienta equivocada.</div>
+    </section>
+
+    <!-- 8 · Tabs del ticket -->
+    <section class="slide">
+      <div class="kicker">Información operativa</div>
+      <h2>Las tabs del ticket</h2>
+      <p class="lead" style="margin-bottom:18px;">Las llena MAC; tú <b>no las modificas</b>, pero <b>sí las consultas</b>: ahí está lo concreto para tu atención en sitio.</p>
+      <div class="grid two">
+        <div class="cardbox"><h3>Dirección y ubicación</h3><p>A dónde debes trasladarte.</p></div>
+        <div class="cardbox"><h3>Usuario de contacto en sitio</h3><p>Con quién presentarte al llegar. <b>No siempre</b> es quien solicitó el servicio.</p></div>
+        <div class="cardbox"><h3>Datos del equipo</h3><p>Tipo, modelo, serie u otros identificadores, según el caso.</p></div>
+        <div class="cardbox"><h3>Por qué importa</h3><p>Ignorarlas causa retrabajo: dirección equivocada, persona que no es, o no saber con qué equipo vas.</p></div>
+      </div>
+    </section>
+
+    <!-- 9 · Documentar en tiempo real -->
+    <section class="slide">
+      <div class="kicker">Regla de oro del IDS</div>
+      <h2>Documenta en tiempo real, no al final</h2>
+      <div class="chain">
+        <span class="st">IDS En camino</span><span class="arr">→</span>
+        <span class="st">IDS En sitio</span><span class="arr">→</span>
+        <span class="st">Diagnosticado</span><span class="arr">→</span>
+        <span class="st auto">Pendiente (si aplica)</span><span class="arr">→</span>
+        <span class="st">Resolución</span>
+      </div>
+      <ul class="points">
+        <li>Cada etapa se registra <b>en el momento en que ocurre</b>, no como resumen al terminar.</li>
+        <li>Dejar todo junto al final <b>no es válido</b>, aunque el servicio se haya resuelto bien.</li>
+        <li>Documentar conforme sucede <b>protege el SLA</b> y da visibilidad real a MAC y a tu coordinador.</li>
+      </ul>
+    </section>
+
+    <!-- 10 · Plantillas -->
+    <section class="slide">
+      <div class="kicker">Siempre por plantilla</div>
+      <h2>Plantillas que utilizas</h2>
+      <table>
+        <thead><tr><th>Plantilla</th><th>Cuándo la aplicas</th></tr></thead>
+        <tbody>
+          <tr><td><b>IDS En camino</b></td><td>Al iniciar tu traslado (hora estimada de llegada).</td></tr>
+          <tr><td><b>IDS En sitio</b></td><td>Al llegar y arrancar la atención (hora de llegada).</td></tr>
+          <tr><td><b>Diagnosticado</b></td><td>Al concluir el diagnóstico, de forma específica.</td></tr>
+          <tr><td><b>Pendiente por cliente / refacción</b></td><td>El ticket espera algo externo.</td></tr>
+          <tr><td><b>Resolución</b> (Sin/Con refacción o Remota)</td><td>El servicio quedó restablecido.</td></tr>
+        </tbody>
+      </table>
+      <div class="note">El <b>texto libre</b> solo se permite cuando ninguna plantilla cubre lo que necesitas: es la excepción, no la costumbre.</div>
+    </section>
+
+    <!-- 11 · Botones -->
+    <section class="slide">
+      <div class="kicker">Decide primero el botón</div>
+      <h2>Responder vs. Resolver</h2>
+      <div class="grid two">
+        <div class="cardbox"><h3>Botón Responder <span class="tag blue">avance</span></h3><p>Plantillas de <b>En camino, En sitio, Diagnosticado y Pendiente</b>. Para documentar cómo va la atención.</p></div>
+        <div class="cardbox"><h3>Botón Resolver <span class="tag green">cierre</span></h3><p>Plantillas de <b>Resolución</b>. Para dar por terminada la atención en sitio.</p></div>
+      </div>
+      <div class="note">Antes de elegir plantilla, decide qué botón corresponde: un <b>avance</b> (Responder) o el <b>cierre</b> (Resolver).</div>
+    </section>
+
+    <!-- 12 · Sé específico -->
+    <section class="slide">
+      <div class="kicker">Calidad del registro</div>
+      <h2>Sé específico al documentar</h2>
+      <p class="lead" style="margin-bottom:18px;">Una plantilla con información genérica documenta poco, aunque sea la plantilla correcta. Ejemplo en <b>Diagnosticado</b>:</p>
+      <div class="vs">
+        <div class="box bad">
+          <span class="lbl">✗ Incorrecto</span>
+          <p>"Se revisó el equipo y se encontró la falla."</p>
+        </div>
+        <div class="box good">
+          <span class="lbl">✓ Correcto</span>
+          <p>"Se revisó impresora HP LaserJet, se detectó fusor dañado que impide el paso del papel. Se requiere reemplazo de fusor."</p>
+        </div>
+      </div>
+      <div class="note">Entre más concreto el dato, más útil es el registro para quien lea el ticket después.</div>
+    </section>
+
+    <!-- 13 · Pendientes = pausar SLA -->
+    <section class="slide">
+      <div class="kicker">Regla crítica</div>
+      <h2>Pendiente = pausar el SLA</h2>
+      <ul class="points check">
+        <li><b>Pendiente por cliente:</b> esperas una respuesta o acción del usuario o solicitante.</li>
+        <li><b>Pendiente por refacción:</b> esperas una refacción para poder resolver.</li>
+        <li>Al aplicar cualquiera de estas plantillas, <b>el sistema pausa automáticamente el reloj del SLA</b>.</li>
+      </ul>
+      <div class="note amber">Es la <b>única forma correcta</b> de dejar un ticket en espera: nunca de forma manual ni solo verbal con tu coordinador.</div>
+    </section>
+
+    <!-- 14 · Resolución y evidencia -->
+    <section class="slide">
+      <div class="kicker">Cierre de la atención</div>
+      <h2>Resolución: formatos y evidencia</h2>
+      <ul class="points">
+        <li>Servicio restablecido → botón <b>Resolver</b> + plantilla de <b>Resolución</b> (Sin/Con refacción o Remota).</li>
+        <li>Recaba en sitio el <b>formato físico de conformidad</b> que aplica al cliente (tu coordinador te indica cuál).</li>
+        <li>Digitaliza y <b>adjunta el formato al ticket</b>. Enviarlo al coordinador <b>no sustituye</b> adjuntarlo: va en ambos lugares.</li>
+        <li>Evidencia fotográfica: solo cuando aporta (p. ej. pieza dañada), <b>1 o 2 fotos</b>, sin abusar.</li>
+      </ul>
+      <div class="note green">Un ticket <b>no está completo</b> hasta que el formato de conformidad está adjunto en GLPI.</div>
+    </section>
+
+    <!-- 15 · Ejemplo bien documentado -->
+    <section class="slide">
+      <div class="kicker">Cómo se ve bien hecho</div>
+      <h2>Un ticket bien documentado</h2>
+      <div class="timeline">
+        <div class="tl"><span class="tg">En camino</span><p>"Salida hacia sitio, hora estimada de llegada 11:30 hrs."</p></div>
+        <div class="tl"><span class="tg">En sitio</span><p>"Llegada a sitio 11:25 hrs. Se contacta con el usuario de contacto."</p></div>
+        <div class="tl"><span class="tg">Diagnosticado</span><p>"Se revisó impresora HP LaserJet M404, fusor dañado que impide el paso del papel. Se requiere reemplazo."</p></div>
+        <div class="tl pend"><span class="tg">Pendiente</span><p>"Se solicita fusor HP M404 a almacén. Sin esta refacción no se puede continuar." (si aplica)</p></div>
+        <div class="tl res"><span class="tg">Resolución</span><p>"Se sustituyó el fusor, pruebas de impresión OK. Inicio 11:25, término 12:10. Formato de conformidad firmado y adjunto."</p></div>
+      </div>
+    </section>
+
+    <!-- 16 · Reglas de oro -->
+    <section class="slide">
+      <div class="kicker">Para llevar</div>
+      <h2>Reglas de oro</h2>
+      <ul class="points check">
+        <li>Si no está en el ticket, no sucedió · revisa el ticket completo antes de salir.</li>
+        <li>Documenta en tiempo real, nunca todo junto al final.</li>
+        <li>Usa siempre la plantilla que corresponde; el texto libre es la excepción.</li>
+        <li>Un ticket no está completo sin el formato de conformidad adjunto en GLPI.</li>
+      </ul>
+      <div class="note"><b>¿Falta información o no puedes acceder a GLPI?</b> Contacta a Mesa de Ayuda Central (MAC) para completar el dato o registrar en tu lugar; la responsabilidad del registro sigue siendo tuya.</div>
+    </section>
+
+  </main>
+
+  <footer class="controls">
+    <button class="nav-btn" id="prev" aria-label="Anterior">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <span class="counter" id="counter">1 / 16</span>
+    <div class="dots" id="dots"></div>
+    <span class="hint">← → avanzar · F pantalla completa</span>
+    <button class="nav-btn" id="next" aria-label="Siguiente">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+  </footer>
+
+<script>
+(() => {
+  "use strict";
+  const slides = [...document.querySelectorAll(".slide")];
+  const total = slides.length;
+  const counter = document.getElementById("counter");
+  const progress = document.getElementById("progress");
+  const dotsWrap = document.getElementById("dots");
+  const prevBtn = document.getElementById("prev");
+  const nextBtn = document.getElementById("next");
+  let i = Math.min(total - 1, Math.max(0, (parseInt(location.hash.slice(1), 10) || 1) - 1));
+
+  slides.forEach((_, n) => {
+    const b = document.createElement("button");
+    b.className = "dot";
+    b.setAttribute("aria-label", "Ir a la diapositiva " + (n + 1));
+    b.addEventListener("click", () => go(n));
+    dotsWrap.appendChild(b);
+  });
+  const dots = [...dotsWrap.children];
+
+  function render() {
+    slides.forEach((s, n) => s.classList.toggle("active", n === i));
+    dots.forEach((d, n) => d.classList.toggle("active", n === i));
+    counter.textContent = (i + 1) + " / " + total;
+    progress.style.width = ((i + 1) / total * 100) + "%";
+    prevBtn.disabled = i === 0;
+    nextBtn.disabled = i === total - 1;
+    history.replaceState(null, "", "#" + (i + 1));
+  }
+  function go(n) { i = Math.max(0, Math.min(total - 1, n)); render(); }
+
+  prevBtn.addEventListener("click", () => go(i - 1));
+  nextBtn.addEventListener("click", () => go(i + 1));
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") { e.preventDefault(); go(i + 1); }
+    else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); go(i - 1); }
+    else if (e.key === "Home") { go(0); }
+    else if (e.key === "End") { go(total - 1); }
+    else if (e.key === "f" || e.key === "F") {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+      else document.exitFullscreen?.();
+    }
+  });
+
+  // Swipe en táctil
+  let x0 = null;
+  document.getElementById("stage").addEventListener("touchstart", (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+  document.getElementById("stage").addEventListener("touchend", (e) => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 50) go(i + (dx < 0 ? 1 : -1));
+    x0 = null;
+  }, { passive: true });
+
+  render();
+})();
+</script>
+</body>
+</html>
