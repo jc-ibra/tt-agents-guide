@@ -48,7 +48,7 @@ Antes de elegir la plantilla, decide primero qué botón te corresponde según l
 
 Una plantilla aplicada con información genérica documenta poco, aunque hayas usado la plantilla correcta. Al completar los espacios de cada plantilla, describe el dato real, no una frase general.
 
-`[CAPTURA: ejemplo de una plantilla con los campos completados]`
+![Ejemplo de una plantilla con los campos completados](capturas/04-02-plantilla-campos-completados.png)
 
 Ejemplo de lo que se espera en Diagnosticado:
 
@@ -78,7 +78,7 @@ Reglas sobre estos formatos:
 - Enviarlos a tu coordinador no sustituye adjuntarlos al ticket: deben estar en ambos lugares.
 - Un ticket no se considera correctamente documentado hasta que el formato de conformidad está adjunto en GLPI.
 
-`[CAPTURA: ticket resuelto con el formato de conformidad adjunto]`
+![Ticket resuelto con el formato de conformidad adjunto](capturas/04-03-ticket-resuelto-conformidad.png)
 
 Sobre evidencia fotográfica: se adjunta cuando aporta al caso (por ejemplo, una pieza dañada), con una o dos fotos suficientes. No se debe abusar de las imágenes ni subir evidencia de más.
 
@@ -86,7 +86,7 @@ Sobre evidencia fotográfica: se adjunta cuando aporta al caso (por ejemplo, una
 
 Para que veas cómo se ve un caso completo, aquí un ejemplo de principio a fin:
 
-`[CAPTURA: hilo completo de seguimientos de un ticket resuelto, con todas las plantillas aplicadas en orden]`
+![Hilo completo de seguimientos de un ticket resuelto, con todas las plantillas aplicadas en orden](capturas/04-04-hilo-completo-seguimientos.png)
 
 1. **IDS En camino:** "Salida de [nombre] hacia sitio, hora estimada de llegada 11:30 hrs."
 2. **IDS En sitio:** "Llegada a sitio 11:25 hrs. Se contacta con [usuario de contacto]."

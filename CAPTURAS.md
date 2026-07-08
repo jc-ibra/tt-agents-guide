@@ -40,9 +40,9 @@ perfiles/ids/docs/capturas/
 | ✔ | Nombre de archivo | Qué debe mostrar |
 |---|---|---|
 | [x] | `04-01-menu-plantillas-responder.png` | Menú de plantillas de seguimiento desplegado desde el botón **Responder** (En camino, En sitio, Diagnosticado, Pendiente). §4.2 |
-| [ ] | `04-02-plantilla-campos-completados.png` | Ejemplo de una plantilla con los campos completados de forma específica (p. ej. Diagnosticado). §4.4 — ⚠️ **reemplazar**: el archivo subido es idéntico a 04-03 y 04-04 (un hilo de seguimientos, no una plantilla en edición). |
-| [ ] | `04-03-ticket-resuelto-conformidad.png` | Ticket resuelto con el formato de conformidad adjunto en GLPI. §4.6 — ⚠️ **reemplazar**: archivo duplicado (ver 04-02). Falta el ticket ya **resuelto** con el formato de conformidad adjunto. |
-| [ ] | `04-04-hilo-completo-seguimientos.png` | Hilo completo de seguimientos de un ticket resuelto, con todas las plantillas aplicadas en orden (En camino → En sitio → Diagnosticado → [Pendiente] → Resolución). §4.7 — ⚠️ **reemplazar**: archivo duplicado (ver 04-02). La imagen actual muestra el hilo en estado *En espera*, no resuelto. |
+| [x] | `04-02-plantilla-campos-completados.png` | Ejemplo de una plantilla con los campos completados de forma específica (p. ej. Diagnosticado). §4.4 |
+| [x] | `04-03-ticket-resuelto-conformidad.png` | Ticket resuelto con el formato de conformidad adjunto en GLPI. §4.6 |
+| [x] | `04-04-hilo-completo-seguimientos.png` | Hilo completo de seguimientos de un ticket resuelto, con todas las plantillas aplicadas en orden (En camino → En sitio → Diagnosticado → [Pendiente] → Resolución). §4.7 |
 
 ---
 
