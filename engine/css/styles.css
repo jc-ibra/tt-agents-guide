@@ -126,6 +126,16 @@ body {
 .nav-item.active .nav-icon { color: var(--brand); }
 .nav-icon { color: var(--muted); flex-shrink: 0; display: flex; }
 
+.nav-footer {
+  margin-top: 18px; padding: 14px 12px 0; border-top: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: 2px;
+}
+.nav-footer-label {
+  font-size: 10px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--muted);
+}
+.nav-footer-date { font-size: 13px; font-weight: 600; color: var(--text-soft); }
+
 /* ===== Main / content ===== */
 .main {
   margin-left: var(--sidebar-w);

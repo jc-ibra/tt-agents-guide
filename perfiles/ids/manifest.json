@@ -4,7 +4,8 @@
     "subtitle": "Ingeniero de Servicio",
     "title": "Manual de Uso de GLPI",
     "platformUrl": "https://helpdesk.trantortechnologies.mx",
-    "contentBase": "docs"
+    "contentBase": "docs",
+    "updated": "9 de julio de 2026"
   },
   "home": "00-indice",
   "groups": [

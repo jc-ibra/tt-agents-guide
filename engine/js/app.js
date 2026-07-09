@@ -83,6 +83,15 @@
       }
       nav.appendChild(g);
     }
+    const updated = (manifest.site || {}).updated;
+    if (updated) {
+      const f = document.createElement("div");
+      f.className = "nav-footer";
+      f.innerHTML =
+        `<span class="nav-footer-label">Última actualización</span>` +
+        `<span class="nav-footer-date">${escapeHtml(updated)}</span>`;
+      nav.appendChild(f);
+    }
   }
 
   const contentUrl = (file) => `${manifest.site.contentBase}/${file}`;
