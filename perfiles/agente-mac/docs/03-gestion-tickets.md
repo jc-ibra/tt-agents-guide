@@ -46,7 +46,9 @@ Para crear un ticket, el agente ingresa a Soporte > Tickets y usa la opción de 
  
 ### Título
  
-Se captura con una nomenclatura fija, **todo en mayúsculas**, con la siguiente estructura:
+Se captura con una nomenclatura fija, **todo en mayúsculas**. La estructura depende de si el caso es de un cliente externo o de una categoría interna.
+ 
+**Clientes externos (rama OP > CE).** El título lleva la sucursal física donde se dará el servicio, con la estructura:
  
 `NOMBRE DE CLIENTE - SUCURSAL - DESCRIPCIÓN BREVE DE LA SOLICITUD`
  
@@ -54,27 +56,26 @@ Ejemplo:
  
 `AFIRME - HEB GUADALUPE LIVAS - FALLA EN TECLADO`
  
+En los clientes externos sin sucursal variable (edificios corporativos, data center) el segmento SUCURSAL usa una convención fija en lugar de dejarse en blanco: `ACTINVER - DATA CENTER - REVISIÓN DE CABLEADO`, `ACTINVER - EDIFICIOS - FALLA DE TECLADO`, `AFIRME - EDIFICIOS - FALLA IMPRESORA`. Las categorías **Edificios** tienen además una regla propia de Regional y Sucursal en la tab Clientes Externos (ver 3.7.1).
+ 
+**Categorías internas (áreas internas y administración).** **No se usa el segmento SUCURSAL.** El título se reduce al **nombre de la categoría hoja en mayúsculas**, seguido de la descripción:
+ 
+`NOMBRE DE LA CATEGORÍA - DESCRIPCIÓN BREVE DE LA SOLICITUD`
+ 
+Ejemplos reales:
+ 
+| Título | Categoría |
+|---|---|
+| `DOCUMENTACIÓN INTERNA - CARTA CUSTODIA` | OP > AI > Documentación Interna |
+| `CONTROL DE ENVÍOS - GUÍA 5786616452` | AD > Servicios Generales > Control de Envíos |
+| `CONTROL DE ACTIVOS - PEDIDO SAE 2206` | AD > Almacén > Control de Activos |
+| `SISTEMAS INTERNOS - FALLA EN IMPRESORA` | OP > AI > Sistemas Internos |
+| `LABORATORIO - REVISIÓN DE IMPRESORA` | OP > AI > Laboratorio |
+| `SERVICIOS INTERNOS - REVISIÓN DE CHAPA DE SEGURIDAD` | AD > Servicios Generales > Servicios Internos |
+ 
 Un título bien construido permite identificar el caso de un vistazo en las listas y reportes, sin abrir el ticket. Es obligatorio respetar la nomenclatura.
  
-**Qué va en el segmento SUCURSAL.** Depende del tipo de caso:
- 
-- **Clientes externos con sitio físico** (Sellcom, Banorte, Cattri, etc.): se usa el nombre real de la sucursal donde se dará el servicio (ejemplo: `HEB GUADALUPE LIVAS`).
-- **Categorías sin sucursal física** (áreas internas, administración y algunas categorías de cliente): se usa una **convención predefinida** por categoría, en lugar de dejar el segmento en blanco. La convención vigente es:
-| Categoría | Convención para el segmento SUCURSAL |
-|---|---|
-| OP > CE > Actinver > Edificios | Actinver Edificio |
-| OP > CE > Actinver > Data Center | Actinver Data Center |
-| OP > CE > Afirme > Edificios | Afirme Edificio |
-| OP > AI > Laboratorio | Laboratorio |
-| OP > AI > Sistemas Internos | Sistemas Internos |
-| OP > AI > Documentación Interna | Documentación Interna |
-| AD > Almacén > Control de Activos | Almacén |
-| AD > Servicios Generales > Control de Envíos | Logística |
-| AD > Servicios Generales > Servicios Internos | Mantenimiento |
-| AD > Tesorería > Viáticos | Tesorería |
-| AD > Relaciones Humanas > Personal | RRHH |
- 
-Regla: cada vez que se dé de alta una categoría nueva sin sucursal física, debe definirse su convención de SUCURSAL y sumarla a esta tabla, para mantener títulos consistentes.
+> **Dónde van las mayúsculas.** El uso de **MAYÚSCULAS** aplica **solo** a dos cosas: el **título completo** del ticket y los valores de convención `NO APLICA` y `NO PROPORCIONADO`. Todo lo demás —la descripción y los campos de las tabs (usuario, modelo, sucursal, dirección, etc.)— se captura con **altas y bajas** (mayúsculas y minúsculas normales), según corresponda: `María del Carmen Jiménez Torres`, `Actinver Corporativo`, no `MARÍA DEL CARMEN…`.
  
 ### Descripción
  
@@ -297,7 +298,7 @@ Aplica a los **campos de texto libre** de todas las tabs:
  
 - Si el dato **debía** proporcionarse pero no lo tenemos: `NO PROPORCIONADO` (en mayúsculas).
 - Si por naturaleza del caso **no corresponde** ningún valor: `NO APLICA` (en mayúsculas).
-- Siempre que se tenga el dato real, se captura. La convención es un último recurso, no un atajo.
+- Siempre que se tenga el dato real, se captura con **altas y bajas** (solo el título, `NO APLICA` y `NO PROPORCIONADO` van en mayúsculas). La convención es un último recurso, no un atajo.
 Los **campos de lista desplegable marcados como obligatorios** (con asterisco rojo) no admiten `NO PROPORCIONADO` ni `NO APLICA`: son los datos mínimos para crear ese tipo de ticket y deben seleccionarse de la lista. Si falta uno de esos datos, se consigue antes de completar el registro.
  
 ### Solicitud de nuevos valores en las listas
@@ -314,7 +315,7 @@ Es la tab de mayor volumen. Aplica a todos los tickets de Clientes Externos. Reg
  
 | Campo | Obligatorio | Qué se captura |
 |---|---|---|
-| Regional | Sí | Zona del coordinador (DTN Zona 1/2/3, DTS Zona 1/2/3). Se selecciona según el estado, con la misma tabla de coordinadores por estado de la sección 3.5. |
+| Regional | Sí | Zona del coordinador (DTN Zona 1/2/3, DTS Zona 1/2/3). Se selecciona según el estado, con la misma tabla de coordinadores por estado de la sección 3.5. **Excepción:** en `OP > CE > Actinver > Edificios` y `OP > CE > Afirme > Edificios` se selecciona la Regional **Edificios** (ver nota al final de esta tab). |
 | Estado | Sí | Estado de la República donde se dará el servicio. |
 | Municipio | Sí | Municipio donde se requiere el servicio. |
 | Local o Foráneo | Sí | Regla de los 30 km: si el IDS debe trasladarse a más de 30 km de su localidad de origen o residencia, es **Foráneo**; si no, **Local**. Si no se tiene el dato, se valida con el coordinador de la zona antes de llenarlo. |
@@ -323,11 +324,16 @@ Es la tab de mayor volumen. Aplica a todos los tickets de Clientes Externos. Reg
 | Modelo | Sí | Modelo del equipo. Se captura siempre que se tenga; solo si realmente no existe o no se proporcionó, aplica la convención de datos faltantes. |
 | Serie | Sí | Número de serie del equipo. Misma regla que Modelo. |
 | CC | Sí | Centro de costos. Puede usarse `NO PROPORCIONADO` si no se tiene, pero **nunca** `NO APLICA`: todo proyecto tiene un centro de costos asignado. |
-| Sucursal | No | Nombre de la sucursal (coincide con el segmento SUCURSAL del título). |
+| Sucursal | No | Nombre de la sucursal (coincide con el segmento SUCURSAL del título). En las categorías Edificios se captura `ACTINVER CORPORATIVO` o `AFIRME CORPORATIVO`, según corresponda. |
 | Dirección | No | Dirección completa: calle o avenida, colonia, municipio, estado y código postal. No es obligatorio en el sistema, pero es clave: es lo que le da al IDS la ubicación exacta a donde dirigirse. Se recomienda llenarla siempre que se tenga. |
 | SIAF | No | Etiqueta de inventario del equipo (no es la serie; es una etiqueta que lo identifica). |
  
 > Buena práctica: aunque Dirección no sea obligatoria para el sistema, sí lo es para la operación. Un ticket sin dirección clara genera retrabajo y traslados fallidos del IDS.
+ 
+> **Categorías Edificios (excepción).** Para `OP > CE > Actinver > Edificios` y `OP > CE > Afirme > Edificios` la tab Clientes Externos y la tab IDS se llenan **igual que en cualquier cliente externo**, con tres particularidades:
+> - **Título:** el segmento de sucursal es fijo, `EDIFICIOS` → `ACTINVER - EDIFICIOS - FALLA DE TECLADO`, `AFIRME - EDIFICIOS - FALLA IMPRESORA`.
+> - **Regional:** se selecciona **Edificios** (no una zona DTN/DTS).
+> - **Sucursal:** se captura `ACTINVER CORPORATIVO` o `AFIRME CORPORATIVO`, según el cliente.
  
 ![Tab Clientes Externos con sus campos](capturas/03-04-tab-clientes-externos.png)
  

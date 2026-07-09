@@ -13,7 +13,7 @@ La tab **Áreas Internas** la comparten cuatro categorías: Laboratorio, Sistema
  
 | Dato | Valor |
 |---|---|
-| Título | LABORATORIO - LABORATORIO - CONFIGURACIÓN DE EQUIPO PARA DESPLIEGUE |
+| Título | LABORATORIO - CONFIGURACIÓN DE EQUIPO PARA DESPLIEGUE |
 | Tipo | Solicitud |
 | Categoría | OP > AI > Laboratorio |
 | Estado inicial | En curso (asignada) |

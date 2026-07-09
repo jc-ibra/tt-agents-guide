@@ -17,7 +17,7 @@ Recordatorio: esta categoría solo se usa cuando Almacén genera un pedido en As
  
 | Dato | Valor |
 |---|---|
-| Título | ALMACÉN - ALMACÉN - PEDIDO SAE EQUIPO DE CÓMPUTO |
+| Título | CONTROL DE ACTIVOS - PEDIDO SAE EQUIPO DE CÓMPUTO |
 | Tipo | Solicitud |
 | Categoría | AD > Almacén > Control de Activos |
 | Estado inicial | En curso (asignada) |
@@ -66,7 +66,7 @@ Este caso es el **envío del teclado de refacción** que quedó pendiente en el 
  
 | Dato | Valor |
 |---|---|
-| Título | LOGÍSTICA - LOGÍSTICA - ENVÍO REFACCIÓN TECLADO T490 |
+| Título | CONTROL DE ENVÍOS - ENVÍO REFACCIÓN TECLADO T490 |
 | Tipo | Solicitud |
 | Categoría | AD > Servicios Generales > Control de Envíos |
 | Estado inicial | En curso (asignada) |

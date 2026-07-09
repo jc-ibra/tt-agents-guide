@@ -18,7 +18,7 @@ Resumen operativo para crear un ticket sin errores. Para el detalle, ver la Part
  
 | # | Campo | Qué poner |
 |---|---|---|
-| 1 | Título | `CLIENTE - SUCURSAL - DESCRIPCIÓN`, todo en mayúsculas. Sin sucursal física, usar la convención de la categoría. |
+| 1 | Título | Clientes externos: `CLIENTE - SUCURSAL - DESCRIPCIÓN`. Categorías internas (sin sucursal): `NOMBRE DE CATEGORÍA - DESCRIPCIÓN`. Todo en mayúsculas. |
 | 2 | Descripción | Detalle claro pensando en el IDS. Adjuntos hasta 10 MB. |
 | 3 | Fecha de apertura | Manual: la de la solicitud o, si no hay, la del correo recibido. Nunca por default. |
 | 4 | Tipo | Incidente (algo falló) o Solicitud (petición estándar). |
@@ -40,6 +40,7 @@ Resumen operativo para crear un ticket sin errores. Para el detalle, ver la Part
 ## Reglas de oro
  
 - Título siempre en mayúsculas y con la nomenclatura.
+- Mayúsculas **solo** en el título y en `NO APLICA` / `NO PROPORCIONADO`; el resto (descripción y campos de las tabs) con altas y bajas.
 - Fecha de apertura manual, nunca por default.
 - Categoría bien elegida = reglas de negocio correctas.
 - Texto libre sin dato: `NO PROPORCIONADO` (debía ir) o `NO APLICA` (no corresponde).
