@@ -22,20 +22,20 @@ Punto de acceso: `https://helpdesk.trantortechnologies.mx`
 
 ### Partes
 
-| Parte | Archivo | Qué cubre |
-|---|---|---|
-| 1. Fundamentos | `01-fundamentos.md` | Tu rol en el flujo, qué es GLPI, SLA, prioridad, escalación y glosario. |
-| 2. Primeros pasos | `02-primeros-pasos.md` | Acceso al sistema, tu perfil restringido y cómo llegar a tus tickets asignados. |
-| 3. Gestión de tickets: recepción y lectura | `03-gestion-tickets.md` | Cómo te llega la asignación, cómo leer un ticket y las tabs con información operativa. |
-| 4. Seguimiento y resolución de tickets | `04-seguimiento-y-resolucion.md` | Plantillas que usas, cómo documentar cada etapa, pendientes, resolución y formatos de conformidad. |
+| Parte | Qué cubre |
+|---|---|
+| 1. Fundamentos | Tu rol en el flujo, qué es GLPI, SLA, prioridad, escalación y glosario. |
+| 2. Primeros pasos | Acceso al sistema, tu perfil restringido y cómo llegar a tus tickets asignados. |
+| 3. Gestión de tickets: recepción y lectura | Cómo te llega la asignación, cómo leer un ticket y las tabs con información operativa. |
+| 4. Seguimiento y resolución de tickets | Plantillas que usas, cómo documentar cada etapa, pendientes, resolución y formatos de conformidad. |
 
 ### Anexos
 
-| Anexo | Archivo | Qué cubre |
-|---|---|---|
-| A. Guía rápida IDS | `anexo-a-guia-rapida.md` | Checklist de una página: antes de salir, al llegar, durante la atención y al resolver. |
-| B. Qué hacer si falta información en el ticket | `anexo-b-informacion-faltante.md` | Protocolo para solicitar datos faltantes directamente a MAC. |
-| C. Qué hacer si no puedes acceder a la plataforma | `anexo-c-problemas-de-acceso.md` | Protocolo para que MAC documente en tu lugar mientras recuperas el acceso. |
+| Anexo | Qué cubre |
+|---|---|
+| A. Guía rápida IDS | Checklist de una página: antes de salir, al llegar, durante la atención y al resolver. |
+| B. Qué hacer si falta información en el ticket | Protocolo para solicitar datos faltantes directamente a MAC. |
+| C. Qué hacer si no puedes acceder a la plataforma | Protocolo para que MAC documente en tu lugar mientras recuperas el acceso. |
 
 ---
 

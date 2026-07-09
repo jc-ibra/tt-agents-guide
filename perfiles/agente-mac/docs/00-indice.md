@@ -22,24 +22,24 @@ Punto de acceso: `https://helpdesk.trantortechnologies.mx`
  
 ### Partes
  
-| Parte | Archivo | Qué cubre |
-|---|---|---|
-| 1. Fundamentos | `01-fundamentos.md` | Qué es GLPI, conceptos ITIL (incidencia vs. solicitud, SLA, prioridad, escalación) y glosario. |
-| 2. Primeros pasos | `02-primeros-pasos.md` | Acceso al sistema, interfaz, perfil MAC y configuración. |
-| 3. Gestión de tickets: creación | `03-gestion-tickets.md` | Rol del agente MAC, estados, campos del ticket, categoría, asignación y campos personalizados (tabs). |
-| 4. Seguimiento de tickets | `04-seguimiento.md` | Propiedad del ticket, plantillas de seguimiento, pausa del SLA, resolución y cierre, escalación. |
+| Parte | Qué cubre |
+|---|---|
+| 1. Fundamentos | Qué es GLPI, conceptos ITIL (incidencia vs. solicitud, SLA, prioridad, escalación) y glosario. |
+| 2. Primeros pasos | Acceso al sistema, interfaz, perfil MAC y configuración. |
+| 3. Gestión de tickets: creación | Rol del agente MAC, estados, campos del ticket, categoría, asignación y campos personalizados (tabs). |
+| 4. Seguimiento de tickets | Propiedad del ticket, plantillas de seguimiento, pausa del SLA, resolución y cierre, escalación. |
  
 ### Anexos
  
-| Anexo | Archivo | Qué cubre |
-|---|---|---|
-| A. Tabla maestra de categorías | `anexo-a-tabla-maestra-categorias.md` | Por categoría: tipo visible, convención de SUCURSAL, asignación, tab e IDS. |
-| B. Niveles de servicio (SLA) | `anexo-b-sla.md` | Tiempos de asignación y solución por tipo, calendario 5x8. |
-| C. Rutas de escalación | `anexo-c-escalacion.md` | Niveles de escalación por categoría (N1, N2, N3). |
-| D. Guía rápida de creación de ticket | `anexo-d-guia-rapida.md` | Checklist de una página y reglas de oro. |
-| E. Caso de uso: Clientes Externos | `anexo-e-caso-de-uso-ce.md` | Ejemplo resuelto con plantillas de seguimiento (ticket 42). |
-| F. Casos de uso: Control de Activos y Envíos | `anexo-f-casos-uso-activos-envios.md` | Ejemplos de las tabs de Almacén y Logística. |
-| G. Caso de uso: Áreas Internas | `anexo-g-caso-uso-areas-internas.md` | Ejemplo de Laboratorio y nota sobre Sistemas Internos. |
+| Anexo | Qué cubre |
+|---|---|
+| A. Tabla maestra de categorías | Por categoría: tipo visible, convención de SUCURSAL, asignación, tab e IDS. |
+| B. Niveles de servicio (SLA) | Tiempos de asignación y solución por tipo, calendario 5x8. |
+| C. Rutas de escalación | Niveles de escalación por categoría (N1, N2, N3). |
+| D. Guía rápida de creación de ticket | Checklist de una página y reglas de oro. |
+| E. Caso de uso: Clientes Externos | Ejemplo resuelto con plantillas de seguimiento (ticket 42). |
+| F. Casos de uso: Control de Activos y Envíos | Ejemplos de las tabs de Almacén y Logística. |
+| G. Caso de uso: Áreas Internas | Ejemplo de Laboratorio y nota sobre Sistemas Internos. |
  
 ---
  
