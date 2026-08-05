@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Evaluación GLPI — MAC / IDS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --paper:#fdfdfc; --card:#ffffff; --ink:#1b2530; --muted:#5c6672;
+    --line:#e4e8ec; --line-strong:#cdd4da; --accent:#12657f; --accent-soft:#e7f0f3;
+    --crit:#b3261e; --crit-soft:#fbeceb; --shadow:0 1px 2px rgba(27,37,48,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#12171c; --card:#171d24; --ink:#e7ecf0; --muted:#9aa5af;
+      --line:#242c34; --line-strong:#323c45; --accent:#4bb8d6; --accent-soft:#12303a;
+      --crit:#e8837b; --crit-soft:#2c1a19; --shadow:0 1px 2px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="light"]{
+    --paper:#fdfdfc; --card:#ffffff; --ink:#1b2530; --muted:#5c6672;
+    --line:#e4e8ec; --line-strong:#cdd4da; --accent:#12657f; --accent-soft:#e7f0f3;
+    --crit:#b3261e; --crit-soft:#fbeceb; --shadow:0 1px 2px rgba(27,37,48,.06);
+  }
+  :root[data-theme="dark"]{
+    --paper:#12171c; --card:#171d24; --ink:#e7ecf0; --muted:#9aa5af;
+    --line:#242c34; --line-strong:#323c45; --accent:#4bb8d6; --accent-soft:#12303a;
+    --crit:#e8837b; --crit-soft:#2c1a19; --shadow:0 1px 2px rgba(0,0,0,.4);
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px; line-height:1.5;
+  }
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace}
+  .wrap{max-width:820px; margin:0 auto; padding:32px 24px 64px}
+
+  /* ---- top control bar (screen only) ---- */
+  .bar{
+    position:sticky; top:0; z-index:5; background:var(--paper);
+    border-bottom:1px solid var(--line); display:flex; gap:10px; align-items:center;
+    justify-content:flex-end; padding:10px 24px;
+  }
+  .bar .spacer{margin-right:auto; font-weight:600; letter-spacing:.02em; color:var(--muted); font-size:.82rem; text-transform:uppercase}
+  button{
+    font:inherit; font-size:.86rem; font-weight:600; cursor:pointer;
+    border:1px solid var(--line-strong); background:var(--card); color:var(--ink);
+    padding:7px 14px; border-radius:7px; box-shadow:var(--shadow);
+  }
+  button.primary{background:var(--accent); border-color:var(--accent); color:#fff}
+  button:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+  /* ---- masthead ---- */
+  header.mast{border-bottom:2px solid var(--ink); padding-bottom:18px; margin-bottom:22px}
+  .eyebrow{font-size:.74rem; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); font-weight:700; margin:0 0 8px}
+  h1{font-size:1.9rem; line-height:1.15; margin:0 0 6px; text-wrap:balance; letter-spacing:-.01em}
+  .sub{color:var(--muted); margin:0; font-size:.95rem}
+  .idfields{display:grid; grid-template-columns:1fr 1fr; gap:10px 26px; margin-top:18px}
+  .idfields .f{display:flex; align-items:flex-end; gap:8px; font-size:.9rem; color:var(--muted)}
+  .idfields .f b{color:var(--ink); font-weight:600; white-space:nowrap}
+  .idfields .line{flex:1; border-bottom:1px solid var(--line-strong); height:1.2em}
+  @media (max-width:560px){ .idfields{grid-template-columns:1fr} }
+
+  .note{
+    font-size:.85rem; color:var(--muted); background:var(--accent-soft);
+    border:1px solid var(--line); border-left:3px solid var(--accent);
+    padding:10px 14px; border-radius:0 7px 7px 0; margin:0 0 26px;
+  }
+
+  /* ---- section headers ---- */
+  .sec{margin:34px 0 16px; display:flex; align-items:baseline; gap:12px}
+  .sec .tag{
+    font:inherit; font-size:.72rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    background:var(--ink); color:var(--paper); padding:4px 9px; border-radius:5px; white-space:nowrap;
+  }
+  .sec h2{font-size:1.15rem; margin:0; letter-spacing:-.01em}
+  .sec .who{font-size:.82rem; color:var(--muted); margin-left:auto; text-align:right}
+
+  /* ---- question card ---- */
+  ol.qs{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:12px}
+  .q{
+    background:var(--card); border:1px solid var(--line); border-radius:9px;
+    padding:14px 16px 12px; box-shadow:var(--shadow); break-inside:avoid;
+  }
+  .q .stem{display:flex; gap:10px; font-weight:600; margin-bottom:10px; line-height:1.4}
+  .q .num{color:var(--accent); font-weight:700; font-variant-numeric:tabular-nums; white-space:nowrap}
+  .q.crit{border-color:var(--crit); border-left:4px solid var(--crit)}
+  .q.crit .num{color:var(--crit)}
+  .flag{
+    display:inline-block; font-size:.64rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--crit); background:var(--crit-soft); border:1px solid var(--crit);
+    padding:1px 6px; border-radius:4px; margin-left:8px; vertical-align:middle; white-space:nowrap;
+  }
+  .opts{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:5px}
+  .opts li{display:flex; gap:9px; align-items:flex-start; font-size:.95rem; line-height:1.4}
+  .box{
+    flex:none; width:15px; height:15px; margin-top:2px; border:1.5px solid var(--line-strong);
+    border-radius:3px; background:var(--paper);
+  }
+  .lt{flex:none; font-weight:600; color:var(--muted); width:1.1em}
+
+  code, .kw{
+    font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:.86em;
+    background:var(--accent-soft); border:1px solid var(--line); border-radius:4px; padding:0 4px;
+  }
+
+  footer{margin-top:40px; padding-top:14px; border-top:1px solid var(--line); font-size:.8rem; color:var(--muted); text-align:center}
+
+  @media print{
+    .bar{display:none}
+    body{background:#fff; color:#000; font-size:12pt}
+    .wrap{max-width:none; padding:0}
+    .q{box-shadow:none}
+    a{color:#000}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="bar">
+  <span class="spacer">Evaluación GLPI · Service Desk</span>
+  <a href="quiz.html" style="font:inherit;font-size:.86rem;font-weight:600;text-decoration:none;border:1px solid var(--line-strong);background:var(--card);color:var(--ink);padding:7px 14px;border-radius:7px;box-shadow:var(--shadow)">Versión interactiva</a>
+  <button id="theme">Tema</button>
+  <button class="primary" onclick="window.print()">Imprimir / PDF</button>
+</div>
+
+<div class="wrap">
+
+  <header class="mast">
+    <p class="eyebrow">Trantor Technologies · Mesa de Ayuda</p>
+    <h1>Evaluación de comprensión del Manual GLPI</h1>
+    <p class="sub">Perfiles Agente MAC e Ingeniero de Servicio (IDS) · Aplicación presencial, sin consulta del manual</p>
+    <div class="idfields">
+      <div class="f"><b>Nombre:</b><span class="line"></span></div>
+      <div class="f"><b>Perfil (MAC / IDS):</b><span class="line"></span></div>
+      <div class="f"><b>Fecha:</b><span class="line"></span></div>
+      <div class="f"><b>Calificación:</b><span class="line"></span></div>
+    </div>
+  </header>
+
+  <p class="note"><b>Instrucciones.</b> Marca <b>una sola</b> opción por pregunta. Contesta el <b>Bloque A (común)</b> y, según tu puesto, el <b>Bloque B (MAC)</b> <u>o</u> el <b>Bloque C (IDS)</b>. Los reactivos marcados <span class="flag">crítico</span> evalúan reglas cuyo incumplimiento causa fallas de operación.</p>
+
+  <!-- ================= BLOQUE A ================= -->
+  <div class="sec"><span class="tag">Bloque A</span><h2>Fundamentos comunes</h2><span class="who">Lo contestan MAC e IDS</span></div>
+  <ol class="qs">
+
+    <li class="q"><div class="stem"><span class="num">A1.</span><span>La regla “si no está en el ticket, no sucedió” significa que:</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Los tickets sin actividad se eliminan automáticamente.</li>
+        <li><span class="box"></span><span class="lt">b)</span> Solo cuentan las acciones registradas en GLPI; toda gestión, llamada o correo debe reflejarse en el ticket.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Puedes registrar de memoria, al final del turno, lo que hiciste.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Las llamadas telefónicas no necesitan registrarse.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">A2.</span><span>Diferencia entre incidencia y solicitud de servicio:</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Son lo mismo; GLPI las trata igual.</li>
+        <li><span class="box"></span><span class="lt">b)</span> Incidencia = instalar un equipo nuevo; solicitud = una falla urgente.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Incidencia = interrupción/falla de un servicio que funcionaba; solicitud = petición estándar prevista, sin falla.</li>
+        <li><span class="box"></span><span class="lt">d)</span> La incidencia siempre es de prioridad baja.</li>
+      </ul></li>
+
+    <li class="q crit"><div class="stem"><span class="num">A3.</span><span>La <u>única</u> forma correcta de pausar el reloj del SLA es: <span class="flag">crítico</span></span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Cambiar el estado a “En espera” manualmente.</li>
+        <li><span class="box"></span><span class="lt">b)</span> Avisar verbalmente al coordinador.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Dejar el ticket sin actualizar hasta que el tercero responda.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Aplicar la plantilla de <b>Pendiente</b> (por cliente o por refacción).</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">A4.</span><span>La documentación de una atención:</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Se registra en tiempo real: cada etapa en el momento en que ocurre.</li>
+        <li><span class="box"></span><span class="lt">b)</span> Se hace en un solo resumen al final, si el servicio salió bien.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Solo se documenta si el cliente lo pide.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Basta con avisar al coordinador por mensaje.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">A5.</span><span>Sobre plantillas de seguimiento vs. texto libre:</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> El texto libre es más rápido, se prefiere siempre.</li>
+        <li><span class="box"></span><span class="lt">b)</span> Se usa siempre la plantilla que corresponda; el texto libre solo cuando ninguna plantilla cubre el caso.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Las plantillas son opcionales.</li>
+        <li><span class="box"></span><span class="lt">d)</span> El texto libre está prohibido en todos los casos.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">A6.</span><span>Si olvidas o pierdes tu contraseña:</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> La restableces tú desde “olvidé mi contraseña”.</li>
+        <li><span class="box"></span><span class="lt">b)</span> Usas la de un compañero mientras tanto.</li>
+        <li><span class="box"></span><span class="lt">c)</span> No hay autoservicio; se solicita el restablecimiento al administrador (vía el responsable / MAC / coordinador).</li>
+        <li><span class="box"></span><span class="lt">d)</span> Creas una cuenta nueva.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">A7.</span><span>Escalar un ticket:</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Es una falla que debe evitarse a toda costa.</li>
+        <li><span class="box"></span><span class="lt">b)</span> Se puede saltar directo a la dirección si urge.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Es correcto y parte del trabajo; se hace <b>en orden</b>, sin saltar niveles.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Solo lo hace el cliente.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">A8.</span><span>Botones <b>Responder</b> y <b>Resolver</b>:</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Responder = avances y pendientes; Resolver = cierre de la atención (resolución/cancelación).</li>
+        <li><span class="box"></span><span class="lt">b)</span> Son el mismo botón con distinto nombre.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Resolver se usa para poner el ticket en espera.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Responder cierra el ticket.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">A9.</span><span>La prioridad de un ticket:</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> La elige el agente a criterio.</li>
+        <li><span class="box"></span><span class="lt">b)</span> La calcula GLPI automáticamente combinando impacto y urgencia; no se captura a mano.</li>
+        <li><span class="box"></span><span class="lt">c)</span> La define el IDS en sitio.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Siempre es Alta.</li>
+      </ul></li>
+
+    <li class="q crit"><div class="stem"><span class="num">A10.</span><span>Compartir tu usuario y contraseña: <span class="flag">crítico</span></span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Se permite entre compañeros del mismo turno.</li>
+        <li><span class="box"></span><span class="lt">b)</span> Es obligatorio para cubrir ausencias.</li>
+        <li><span class="box"></span><span class="lt">c)</span> No afecta en nada.</li>
+        <li><span class="box"></span><span class="lt">d)</span> No está permitido; rompe la trazabilidad de quién hizo cada acción.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">A11.</span><span>Una plantilla aplicada “a medias” (sin completar los espacios <code>[__]</code>):</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Documenta menos que un buen texto libre; hay que llenar todos los espacios con el dato real.</li>
+        <li><span class="box"></span><span class="lt">b)</span> Es aceptable porque ya se usó la plantilla.</li>
+        <li><span class="box"></span><span class="lt">c)</span> GLPI la completa sola.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Es mejor que una completa.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">A12.</span><span>Un ticket de prioridad <b>Alta</b> implica que:</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Puede esperar al día siguiente.</li>
+        <li><span class="box"></span><span class="lt">b)</span> No requiere documentación.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Debes actuar y documentar con mayor rapidez, porque su SLA es más ajustado.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Su SLA no corre.</li>
+      </ul></li>
+  </ol>
+
+  <!-- ================= BLOQUE B ================= -->
+  <div class="sec"><span class="tag">Bloque B</span><h2>Perfil MAC — Agente de Mesa de Ayuda</h2><span class="who">Solo perfil MAC</span></div>
+  <ol class="qs">
+
+    <li class="q"><div class="stem"><span class="num">B1.</span><span>Todo ticket que crea el agente MAC nace en el estado:</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Nuevo.</li>
+        <li><span class="box"></span><span class="lt">b)</span> En curso (asignada).</li>
+        <li><span class="box"></span><span class="lt">c)</span> En espera.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Aprobación.</li>
+      </ul></li>
+
+    <li class="q crit"><div class="stem"><span class="num">B2.</span><span>El agente MAC cierra el ticket: <span class="flag">crítico</span></span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Manualmente, en cuanto lo resuelve.</li>
+        <li><span class="box"></span><span class="lt">b)</span> A las 24 horas.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Nunca; GLPI lo cierra automáticamente a las <b>48 horas</b> de estar en Resuelto.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Cuando el cliente lo pide por teléfono.</li>
+      </ul></li>
+
+    <li class="q crit"><div class="stem"><span class="num">B3.</span><span>El uso de <b>MAYÚSCULAS</b> aplica a: <span class="flag">crítico</span></span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Solo el título completo y los valores <span class="kw">NO APLICA</span> / <span class="kw">NO PROPORCIONADO</span>; todo lo demás en altas y bajas.</li>
+        <li><span class="box"></span><span class="lt">b)</span> Todo el ticket.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Solo la descripción.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Nada va en mayúsculas.</li>
+      </ul></li>
+
+    <li class="q crit"><div class="stem"><span class="num">B4.</span><span>Diferencia entre <span class="kw">NO PROPORCIONADO</span> y <span class="kw">NO APLICA</span>: <span class="flag">crítico</span></span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Son intercambiables.</li>
+        <li><span class="box"></span><span class="lt">b)</span> <span class="kw">NO PROPORCIONADO</span> = debía haber dato pero no lo dieron; <span class="kw">NO APLICA</span> = por naturaleza del caso no corresponde ninguno.</li>
+        <li><span class="box"></span><span class="lt">c)</span> <span class="kw">NO APLICA</span> se usa cuando el cliente no contestó.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Ambos se escriben en minúsculas.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">B5.</span><span>Campo <b>CC</b> (centro de costos) en la tab Clientes Externos:</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Puede ir <span class="kw">NO APLICA</span> sin problema.</li>
+        <li><span class="box"></span><span class="lt">b)</span> Se deja vacío.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Puede ir <span class="kw">NO PROPORCIONADO</span> si no se tiene, pero <b>nunca</b> <span class="kw">NO APLICA</span> (todo proyecto tiene CC).</li>
+        <li><span class="box"></span><span class="lt">d)</span> Se inventa un número.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">B6.</span><span>Título de un cliente externo con sucursal:</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> <span class="kw">NOMBRE DE CLIENTE - SUCURSAL - DESCRIPCIÓN BREVE</span></li>
+        <li><span class="box"></span><span class="lt">b)</span> <span class="kw">descripción - cliente - fecha</span></li>
+        <li><span class="box"></span><span class="lt">c)</span> Solo la descripción.</li>
+        <li><span class="box"></span><span class="lt">d)</span> <span class="kw">NOMBRE DE CATEGORÍA - DESCRIPCIÓN</span> (sin sucursal).</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">B7.</span><span>Título de una <b>categoría interna</b> (áreas internas / administración):</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Igual que un externo, con sucursal.</li>
+        <li><span class="box"></span><span class="lt">b)</span> Lleva el nombre del coordinador.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Sin segmento SUCURSAL: <span class="kw">NOMBRE DE LA CATEGORÍA - DESCRIPCIÓN</span></li>
+        <li><span class="box"></span><span class="lt">d)</span> Va en minúsculas.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">B8.</span><span>En un Cliente Externo de <b>atención dinámica por zona</b>, el campo “Asignado a” se llena:</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Manualmente, con el <b>coordinador operativo</b> según el estado donde se dará el servicio.</li>
+        <li><span class="box"></span><span class="lt">b)</span> GLPI lo asigna solo, siempre.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Con el IDS directamente.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Se deja sin asignar.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">B9.</span><span>Categorías con <b>responsable fijo</b> (p. ej. Control de Envíos, Laboratorio, Sistemas Internos):</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> El agente asigna al coordinador por estado.</li>
+        <li><span class="box"></span><span class="lt">b)</span> GLPI las asigna automáticamente; el agente <b>no</b> elige coordinador.</li>
+        <li><span class="box"></span><span class="lt">c)</span> No se asignan a nadie.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Las asigna el IDS.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">B10.</span><span>Después de guardar el ticket, se debe <b>reabrir</b> para:</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Cambiar la prioridad.</li>
+        <li><span class="box"></span><span class="lt">b)</span> Cerrarlo.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Habilitar los campos personalizados y validar la asignación/categoría.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Nada; el registro ya terminó.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">B11.</span><span>Al reabrir, la asignación automática <b>no</b> cayó en el responsable esperado. Casi siempre significa que:</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> La categoría está mal elegida y debe corregirse.</li>
+        <li><span class="box"></span><span class="lt">b)</span> Hay que ignorarlo.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Se asigna a cualquiera.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Se cancela el ticket.</li>
+      </ul></li>
+
+    <li class="q crit"><div class="stem"><span class="num">B12.</span><span>La tab <b>IDS</b> se llena: <span class="flag">crítico</span></span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Solo en clientes externos.</li>
+        <li><span class="box"></span><span class="lt">b)</span> Siempre, en todas las categorías, con una <b>única excepción: Control de Activos</b>.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Nunca la llena el MAC.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Solo cuando el IDS lo pide.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">B13.</span><span>Un pedido SAE (Control de Activos) que debe <b>viajar a otro estado</b> con guía de traslado:</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Se pone todo en el mismo ticket de Control de Activos.</li>
+        <li><span class="box"></span><span class="lt">b)</span> No se registra.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Se registra en un <b>ticket aparte</b> de Control de Envíos; no se mezcla con Control de Activos.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Va en la tab IDS.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">B14.</span><span>Regla de los <b>30 km</b> (Local o Foráneo):</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Si el IDS se traslada a más de 30 km de su localidad de origen/residencia es <b>Foráneo</b>; si no, <b>Local</b>.</li>
+        <li><span class="box"></span><span class="lt">b)</span> Más de 30 km es Local.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Se mide desde la oficina de MAC.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Siempre es Foráneo.</li>
+      </ul></li>
+
+    <li class="q crit"><div class="stem"><span class="num">B15.</span><span>La <b>Fecha de apertura</b>: <span class="flag">crítico</span></span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Se deja la que pone GLPI por defecto.</li>
+        <li><span class="box"></span><span class="lt">b)</span> Se captura manualmente: la fecha/hora indicada en la solicitud, o la del correo si no se especifica.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Es la fecha en que se cierra.</li>
+        <li><span class="box"></span><span class="lt">d)</span> La elige el IDS.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">B16.</span><span>Necesitas un valor que <b>no existe</b> en una lista (Equipo, Carrier, Regional…):</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Lo das de alta tú mismo.</li>
+        <li><span class="box"></span><span class="lt">b)</span> Usas <span class="kw">NO APLICA</span>.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Dejas el campo vacío.</li>
+        <li><span class="box"></span><span class="lt">d)</span> No lo creas; lo solicitas al administrador (Juan Carlos Pérez Salgado).</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">B17.</span><span>En la matriz de prioridad, <b>urgencia Alta + impacto Medio</b> =</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Media.</li>
+        <li><span class="box"></span><span class="lt">b)</span> Alta.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Baja.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Crítica.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">B18.</span><span>SLA estándar vigente de un <b>Incidente</b>:</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> TTO 6 h y TTR 30 h.</li>
+        <li><span class="box"></span><span class="lt">b)</span> 24 h para todo.</li>
+        <li><span class="box"></span><span class="lt">c)</span> TTO 3 h y TTR 10 h, calendario 5×8.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Sin límite de tiempo.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">B19.</span><span>El SLA se asigna:</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Automáticamente según el <b>tipo</b> (Incidente/Solicitud); por eso clasificar bien el tipo es clave.</li>
+        <li><span class="box"></span><span class="lt">b)</span> El agente lo captura a mano.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Lo define el coordinador.</li>
+        <li><span class="box"></span><span class="lt">d)</span> No existe SLA.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">B20.</span><span>En las categorías <b>Edificios</b> (Actinver / Afirme):</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Se asigna coordinador por estado como cualquier cliente.</li>
+        <li><span class="box"></span><span class="lt">b)</span> La Regional es <b>Edificios</b> (no una zona DTN/DTS) y la Sucursal es <span class="kw">ACTINVER CORPORATIVO</span> / <span class="kw">AFIRME CORPORATIVO</span>.</li>
+        <li><span class="box"></span><span class="lt">c)</span> No se llena la tab Clientes Externos.</li>
+        <li><span class="box"></span><span class="lt">d)</span> El título no lleva el segmento de sucursal.</li>
+      </ul></li>
+  </ol>
+
+  <!-- ================= BLOQUE C ================= -->
+  <div class="sec"><span class="tag">Bloque C</span><h2>Perfil IDS — Ingeniero de Servicio</h2><span class="who">Solo perfil IDS</span></div>
+  <ol class="qs">
+
+    <li class="q"><div class="stem"><span class="num">C1.</span><span>Antes de trasladarte a sitio:</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Entras al ticket en GLPI y revisas <b>toda</b> la información, no solo el título.</li>
+        <li><span class="box"></span><span class="lt">b)</span> Basta con lo que te dijo el coordinador por teléfono.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Vas directo y revisas al llegar.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Esperas a que el cliente te llame.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">C2.</span><span>En las <b>tabs</b> del ticket, como IDS encuentras:</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Nada que te sirva.</li>
+        <li><span class="box"></span><span class="lt">b)</span> Dirección/ubicación, usuario de contacto en sitio y datos del equipo (y <b>no</b> las modificas).</li>
+        <li><span class="box"></span><span class="lt">c)</span> Solo el nombre del coordinador.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Tu contraseña.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">C3.</span><span>El <b>usuario de contacto en sitio</b>:</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Siempre es quien solicitó el servicio.</li>
+        <li><span class="box"></span><span class="lt">b)</span> Es tu coordinador.</li>
+        <li><span class="box"></span><span class="lt">c)</span> No siempre es quien solicitó el servicio; con esa persona te presentas al llegar.</li>
+        <li><span class="box"></span><span class="lt">d)</span> No importa quién sea.</li>
+      </ul></li>
+
+    <li class="q crit"><div class="stem"><span class="num">C4.</span><span>¿Puede el IDS modificar la información general que capturó MAC? <span class="flag">crítico</span></span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> No; solo <b>agrega</b> sus seguimientos con las plantillas correspondientes.</li>
+        <li><span class="box"></span><span class="lt">b)</span> Sí, la que quiera.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Solo la prioridad.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Solo la categoría.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">C5.</span><span>Orden mínimo de documentación de un ticket:</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Solo la Resolución al final.</li>
+        <li><span class="box"></span><span class="lt">b)</span> IDS En camino → En sitio → Diagnosticado → Resolución.</li>
+        <li><span class="box"></span><span class="lt">c)</span> En sitio → En camino → Resolución.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Cualquier orden, no importa.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">C6.</span><span>Un <b>diagnóstico</b> bien documentado se ve así:</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> “Se revisó el equipo y se encontró la falla.”</li>
+        <li><span class="box"></span><span class="lt">b)</span> “Ya quedó.”</li>
+        <li><span class="box"></span><span class="lt">c)</span> “Impresora HP LaserJet M404, fusor dañado que impide el paso del papel; requiere reemplazo de fusor.”</li>
+        <li><span class="box"></span><span class="lt">d)</span> “Falla varia.”</li>
+      </ul></li>
+
+    <li class="q crit"><div class="stem"><span class="num">C7.</span><span>El <b>formato físico de conformidad</b>: <span class="flag">crítico</span></span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Se digitaliza y se adjunta al ticket; enviarlo al coordinador <b>no</b> sustituye adjuntarlo (debe estar en ambos lugares).</li>
+        <li><span class="box"></span><span class="lt">b)</span> Basta con enviarlo al coordinador por WhatsApp.</li>
+        <li><span class="box"></span><span class="lt">c)</span> No es necesario si el servicio quedó bien.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Solo se guarda en papel.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">C8.</span><span>Un ticket <b>no</b> se considera correctamente documentado hasta que:</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> El coordinador lo aprueba verbalmente.</li>
+        <li><span class="box"></span><span class="lt">b)</span> El formato de conformidad está adjunto en GLPI.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Pasan 48 horas.</li>
+        <li><span class="box"></span><span class="lt">d)</span> El cliente paga.</li>
+      </ul></li>
+
+    <li class="q crit"><div class="stem"><span class="num">C9.</span><span>Tu atención se detiene porque falta una <b>refacción</b>: <span class="flag">crítico</span></span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Dejas el ticket sin tocar.</li>
+        <li><span class="box"></span><span class="lt">b)</span> Lo cierras como resuelto.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Aplicas la plantilla <b>Pendiente por refacción</b> (pausa el SLA); nunca de forma manual ni solo verbal.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Avisas solo por teléfono y ya.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">C10.</span><span>Al revisar el ticket detectas que <b>falta información</b> (dirección incompleta, sin contacto):</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> No supones el dato ni te trasladas; lo solicitas a <b>MAC</b> antes de salir.</li>
+        <li><span class="box"></span><span class="lt">b)</span> Vas a sitio y ahí improvisas.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Cancelas el ticket.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Inventas la dirección más probable.</li>
+      </ul></li>
+
+    <li class="q crit"><div class="stem"><span class="num">C11.</span><span>Si <b>no puedes acceder</b> a GLPI y necesitas documentar tu atención: <span class="flag">crítico</span></span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Dejas la documentación para cuando recuperes el acceso, sin avisar.</li>
+        <li><span class="box"></span><span class="lt">b)</span> Pides a MAC que registre por ti con el detalle exacto; la responsabilidad de que quede bien <b>sigue siendo tuya</b>.</li>
+        <li><span class="box"></span><span class="lt">c)</span> No documentas; no es tu culpa.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Usas la cuenta de un compañero.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">C12.</span><span>Evidencia <b>fotográfica</b>:</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Cuantas más fotos, mejor.</li>
+        <li><span class="box"></span><span class="lt">b)</span> Solo cuando aporta al caso, 1 o 2 fotos suficientes; no se abusa de imágenes.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Nunca se adjuntan fotos.</li>
+        <li><span class="box"></span><span class="lt">d)</span> Solo una selfie del IDS en sitio.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">C13.</span><span>La <b>prioridad</b> del ticket, para el IDS:</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Ya viene calculada por GLPI; no la modificas, pero la tomas en cuenta para actuar más rápido.</li>
+        <li><span class="box"></span><span class="lt">b)</span> La cambias en sitio.</li>
+        <li><span class="box"></span><span class="lt">c)</span> No existe.</li>
+        <li><span class="box"></span><span class="lt">d)</span> La define el cliente.</li>
+      </ul></li>
+
+    <li class="q"><div class="stem"><span class="num">C14.</span><span>El acceso del IDS en campo:</span></div>
+      <ul class="opts">
+        <li><span class="box"></span><span class="lt">a)</span> Solo desde una PC de oficina.</li>
+        <li><span class="box"></span><span class="lt">b)</span> Con la cuenta del coordinador.</li>
+        <li><span class="box"></span><span class="lt">c)</span> Principalmente desde el <b>celular</b>, con su correo y contraseña; desde cualquier dispositivo con internet.</li>
+        <li><span class="box"></span><span class="lt">d)</span> No necesita cuenta.</li>
+      </ul></li>
+  </ol>
+
+  <footer>Trantor Technologies · Service Desk · Evaluación basada en el Manual GLPI (perfiles MAC e IDS)</footer>
+</div>
+
+<script>
+  (function(){
+    var btn=document.getElementById('theme');
+    btn.addEventListener('click',function(){
+      var r=document.documentElement;
+      var cur=r.getAttribute('data-theme');
+      if(!cur){ cur = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark':'light'; }
+      r.setAttribute('data-theme', cur==='dark'?'light':'dark');
+    });
+  })();
+</script>
+</body>
+</html>

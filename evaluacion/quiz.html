@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Evaluación interactiva GLPI — MAC / IDS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --paper:#f4f7f9; --card:#fff; --ink:#1b2530; --muted:#5c6672;
+    --line:#dce3e8; --line-strong:#c5ced6; --accent:#12657f; --accent-soft:#e7f0f3;
+    --ok:#1a7a4c; --ok-soft:#e8f6ef; --bad:#b3261e; --bad-soft:#fbeceb;
+    --warn:#9a6700; --warn-soft:#fff8e6; --shadow:0 1px 2px rgba(27,37,48,.06);
+    --radius:10px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px; line-height:1.5; min-height:100vh;
+  }
+  .bar{
+    position:sticky; top:0; z-index:5; background:rgba(244,247,249,.92);
+    backdrop-filter:blur(8px); border-bottom:1px solid var(--line);
+    display:flex; gap:10px; align-items:center; padding:10px 20px;
+  }
+  .bar .spacer{margin-right:auto; font-weight:600; font-size:.82rem; letter-spacing:.02em;
+    text-transform:uppercase; color:var(--muted)}
+  .bar a, button{
+    font:inherit; font-size:.86rem; font-weight:600; cursor:pointer;
+    border:1px solid var(--line-strong); background:var(--card); color:var(--ink);
+    padding:7px 14px; border-radius:7px; box-shadow:var(--shadow); text-decoration:none;
+  }
+  button.primary{background:var(--accent); border-color:var(--accent); color:#fff}
+  button:disabled{opacity:.45; cursor:not-allowed}
+  button:focus-visible, a:focus-visible, input:focus-visible, .opt:focus-within{
+    outline:2px solid var(--accent); outline-offset:2px;
+  }
+
+  .wrap{max-width:720px; margin:0 auto; padding:28px 20px 72px}
+  .screen{display:none}
+  .screen.active{display:block}
+  .eyebrow{font-size:.74rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--accent); font-weight:700; margin:0 0 8px}
+  h1{font-size:1.75rem; line-height:1.15; margin:0 0 8px; letter-spacing:-.01em}
+  .lead{color:var(--muted); margin:0 0 22px}
+
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:20px; box-shadow:var(--shadow); margin-bottom:16px;
+  }
+  label.field{display:block; margin-bottom:14px; font-size:.9rem; font-weight:600}
+  label.field input, label.field select{
+    display:block; width:100%; margin-top:6px; font:inherit; padding:10px 12px;
+    border:1px solid var(--line-strong); border-radius:8px; background:#fff; color:var(--ink);
+  }
+  .profiles{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:8px 0 18px}
+  @media (max-width:520px){ .profiles{grid-template-columns:1fr} }
+  .profile{
+    border:2px solid var(--line); border-radius:var(--radius); padding:14px 16px;
+    cursor:pointer; background:var(--card); text-align:left;
+  }
+  .profile strong{display:block; font-size:1.05rem; margin-bottom:2px}
+  .profile span{font-size:.85rem; color:var(--muted)}
+  .profile.selected{border-color:var(--accent); background:var(--accent-soft)}
+  .rules{font-size:.9rem; color:var(--muted); margin:0 0 18px; padding-left:18px}
+  .rules li{margin:4px 0}
+  .rules b{color:var(--bad)}
+
+  .progress-wrap{margin-bottom:18px}
+  .progress-meta{display:flex; justify-content:space-between; font-size:.82rem;
+    color:var(--muted); margin-bottom:6px; font-weight:600}
+  .progress{
+    height:8px; background:var(--line); border-radius:99px; overflow:hidden;
+  }
+  .progress > i{display:block; height:100%; width:0; background:var(--accent);
+    border-radius:99px; transition:width .25s ease}
+  .q-head{display:flex; gap:10px; align-items:flex-start; margin-bottom:14px}
+  .q-num{flex:none; font-weight:700; color:var(--accent); font-variant-numeric:tabular-nums}
+  .q-stem{font-weight:600; line-height:1.4}
+  .flag{
+    display:inline-block; font-size:.64rem; font-weight:700; letter-spacing:.06em;
+    text-transform:uppercase; color:var(--bad); background:var(--bad-soft);
+    border:1px solid var(--bad); padding:1px 6px; border-radius:4px; margin-left:6px;
+    vertical-align:middle;
+  }
+  .opts{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px}
+  .opt{
+    display:flex; gap:10px; align-items:flex-start; padding:12px 14px;
+    border:1.5px solid var(--line); border-radius:9px; cursor:pointer; background:#fff;
+    transition:border-color .15s, background .15s;
+  }
+  .opt:hover{border-color:var(--line-strong)}
+  .opt.picked{border-color:var(--accent); background:var(--accent-soft)}
+  .opt input{margin-top:3px; accent-color:var(--accent)}
+  .opt .lt{flex:none; font-weight:700; color:var(--muted); width:1.2em}
+  .nav{display:flex; gap:10px; justify-content:space-between; margin-top:18px; flex-wrap:wrap}
+  .nav .right{display:flex; gap:10px; margin-left:auto}
+
+  .result-banner{
+    border-radius:var(--radius); padding:22px 20px; margin-bottom:18px; text-align:center;
+  }
+  .result-banner.pass{background:var(--ok-soft); border:1px solid var(--ok); color:var(--ok)}
+  .result-banner.fail{background:var(--bad-soft); border:1px solid var(--bad); color:var(--bad)}
+  .result-banner .score{font-size:2.4rem; font-weight:800; line-height:1; margin:8px 0}
+  .result-banner .detail{font-size:.95rem; opacity:.9}
+  .summary-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:18px}
+  @media (max-width:520px){ .summary-grid{grid-template-columns:1fr} }
+  .stat{background:var(--card); border:1px solid var(--line); border-radius:9px;
+    padding:12px; text-align:center}
+  .stat b{display:block; font-size:1.35rem}
+  .stat span{font-size:.78rem; color:var(--muted); text-transform:uppercase;
+    letter-spacing:.04em; font-weight:600}
+  .crit-warn{
+    background:var(--warn-soft); border:1px solid #e0c36a; color:var(--warn);
+    border-radius:9px; padding:12px 14px; margin-bottom:16px; font-size:.92rem;
+  }
+  .review h2{font-size:1.1rem; margin:0 0 12px}
+  .rev{
+    border:1px solid var(--line); border-radius:9px; padding:14px; margin-bottom:10px;
+    background:var(--card);
+  }
+  .rev.ok{border-left:4px solid var(--ok)}
+  .rev.bad{border-left:4px solid var(--bad)}
+  .rev .meta{font-size:.8rem; color:var(--muted); margin-bottom:4px; font-weight:600}
+  .rev .ans{font-size:.9rem; margin-top:6px}
+  .rev .ans em{font-style:normal; color:var(--ok); font-weight:600}
+  .rev .ans .wrong{color:var(--bad); font-weight:600}
+
+  footer{margin-top:28px; font-size:.8rem; color:var(--muted); text-align:center}
+</style>
+</head>
+<body>
+<div class="bar">
+  <span class="spacer">Evaluación interactiva · GLPI</span>
+  <a href="index.html">Versión impresa</a>
+</div>
+
+<main class="wrap">
+
+  <!-- START -->
+  <section id="screen-start" class="screen active">
+    <p class="eyebrow">Trantor Technologies · Mesa de Ayuda</p>
+    <h1>Evaluación de comprensión del Manual GLPI</h1>
+    <p class="lead">Versión interactiva: elige tu perfil, contesta una pregunta a la vez y al final ves tu calificación con la misma regla exigente que el examen en papel.</p>
+
+    <div class="card">
+      <label class="field">Nombre
+        <input id="nombre" type="text" autocomplete="name" placeholder="Tu nombre completo" maxlength="80">
+      </label>
+
+      <p style="margin:0 0 6px; font-size:.9rem; font-weight:600">Perfil</p>
+      <div class="profiles" role="radiogroup" aria-label="Perfil">
+        <button type="button" class="profile" data-perfil="MAC" id="btn-mac">
+          <strong>Agente MAC</strong>
+          <span>Bloque A + B · 32 reactivos</span>
+        </button>
+        <button type="button" class="profile" data-perfil="IDS" id="btn-ids">
+          <strong>Ingeniero IDS</strong>
+          <span>Bloque A + C · 26 reactivos</span>
+        </button>
+      </div>
+
+      <ul class="rules">
+        <li>Una sola opción por pregunta. Sin consulta del manual.</li>
+        <li>Aprobatorio: <b>≥ 90 %</b> de aciertos.</li>
+        <li><b>Reprobatorio automático</b> si fallas cualquier reactivo marcado crítico.</li>
+      </ul>
+
+      <button class="primary" id="btn-start" disabled>Comenzar evaluación</button>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="screen-quiz" class="screen">
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span id="prog-label">Pregunta 1 de 32</span>
+        <span id="prog-perfil">MAC</span>
+      </div>
+      <div class="progress" aria-hidden="true"><i id="prog-bar"></i></div>
+    </div>
+
+    <div class="card" id="question-card">
+      <div class="q-head">
+        <span class="q-num" id="q-id">A1.</span>
+        <div class="q-stem" id="q-stem"></div>
+      </div>
+      <ul class="opts" id="q-opts" role="radiogroup"></ul>
+    </div>
+
+    <div class="nav">
+      <button type="button" id="btn-prev">Anterior</button>
+      <div class="right">
+        <button type="button" class="primary" id="btn-next">Siguiente</button>
+        <button type="button" class="primary" id="btn-finish" hidden>Calificar</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULT -->
+  <section id="screen-result" class="screen">
+    <div id="result-banner" class="result-banner"></div>
+    <div class="summary-grid" id="summary-grid"></div>
+    <div id="crit-box"></div>
+
+    <div class="review">
+      <h2>Revisión de respuestas</h2>
+      <div id="review-list"></div>
+    </div>
+
+    <div class="nav" style="margin-top:20px">
+      <button type="button" id="btn-retry">Intentar de nuevo</button>
+      <a href="index.html">Ver versión impresa</a>
+    </div>
+  </section>
+
+  <footer>Trantor Technologies · Service Desk · Misma clave y criterio que la evaluación impresa</footer>
+</main>
+
+<script src="banco.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var banco = window.EVAL_BANCO;
+  if (!banco) {
+    document.body.innerHTML = "<p style='padding:2rem'>No se pudo cargar banco.js. Sirve la carpeta con un servidor local (no abras el archivo directo).</p>";
+    return;
+  }
+
+  var state = {
+    nombre: "",
+    perfil: null, // MAC | IDS
+    cola: [],
+    idx: 0,
+    respuestas: {} // id -> "a"|"b"|"c"|"d"
+  };
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  function show(id) {
+    ["screen-start", "screen-quiz", "screen-result"].forEach(function (s) {
+      $(s).classList.toggle("active", s === id);
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function buildCola(perfil) {
+    var items = banco.bloques.A.items.slice();
+    if (perfil === "MAC") items = items.concat(banco.bloques.B.items);
+    else items = items.concat(banco.bloques.C.items);
+    return items;
+  }
+
+  function updateStartBtn() {
+    $("btn-start").disabled = !state.perfil || !$("nombre").value.trim();
+  }
+
+  document.querySelectorAll(".profile").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      state.perfil = btn.getAttribute("data-perfil");
+      document.querySelectorAll(".profile").forEach(function (b) {
+        b.classList.toggle("selected", b === btn);
+      });
+      updateStartBtn();
+    });
+  });
+
+  $("nombre").addEventListener("input", updateStartBtn);
+
+  $("btn-start").addEventListener("click", function () {
+    state.nombre = $("nombre").value.trim();
+    state.cola = buildCola(state.perfil);
+    state.idx = 0;
+    state.respuestas = {};
+    $("prog-perfil").textContent = state.perfil;
+    renderQuestion();
+    show("screen-quiz");
+  });
+
+  function renderQuestion() {
+    var q = state.cola[state.idx];
+    var total = state.cola.length;
+    var n = state.idx + 1;
+
+    $("prog-label").textContent = "Pregunta " + n + " de " + total;
+    $("prog-bar").style.width = ((n / total) * 100) + "%";
+    $("q-id").textContent = q.id + ".";
+
+    var stem = q.stem;
+    if (q.critico) stem += ' <span class="flag">crítico</span>';
+    $("q-stem").innerHTML = stem;
+
+    var letras = ["a", "b", "c", "d"];
+    var html = "";
+    letras.forEach(function (L) {
+      var picked = state.respuestas[q.id] === L ? " picked" : "";
+      var checked = state.respuestas[q.id] === L ? " checked" : "";
+      html +=
+        '<li><label class="opt' + picked + '">' +
+        '<input type="radio" name="resp" value="' + L + '"' + checked + ">" +
+        '<span class="lt">' + L + ")</span>" +
+        "<span>" + escapeHtml(q.opciones[L]) + "</span>" +
+        "</label></li>";
+    });
+    $("q-opts").innerHTML = html;
+
+    $("q-opts").querySelectorAll("input").forEach(function (inp) {
+      inp.addEventListener("change", function () {
+        state.respuestas[q.id] = inp.value;
+        $("q-opts").querySelectorAll(".opt").forEach(function (lab) {
+          lab.classList.toggle("picked", lab.querySelector("input").checked);
+        });
+        syncNav();
+      });
+    });
+
+    $("btn-prev").disabled = state.idx === 0;
+    var last = state.idx === total - 1;
+    $("btn-next").hidden = last;
+    $("btn-finish").hidden = !last;
+    syncNav();
+  }
+
+  function syncNav() {
+    var q = state.cola[state.idx];
+    var answered = !!state.respuestas[q.id];
+    $("btn-next").disabled = !answered;
+    $("btn-finish").disabled = !answered;
+  }
+
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  $("btn-prev").addEventListener("click", function () {
+    if (state.idx > 0) {
+      state.idx--;
+      renderQuestion();
+    }
+  });
+
+  $("btn-next").addEventListener("click", function () {
+    if (state.idx < state.cola.length - 1) {
+      state.idx++;
+      renderQuestion();
+    }
+  });
+
+  $("btn-finish").addEventListener("click", function () {
+    var missing = state.cola.filter(function (q) { return !state.respuestas[q.id]; });
+    if (missing.length) {
+      alert("Faltan " + missing.length + " pregunta(s) sin contestar.");
+      return;
+    }
+    showResult();
+  });
+
+  function showResult() {
+    var total = state.cola.length;
+    var aciertos = 0;
+    var critFallados = [];
+    var review = [];
+
+    state.cola.forEach(function (q) {
+      var resp = state.respuestas[q.id];
+      var ok = resp === q.correcta;
+      if (ok) aciertos++;
+      else if (q.critico) critFallados.push(q.id);
+      review.push({ q: q, resp: resp, ok: ok });
+    });
+
+    var pct = aciertos / total;
+    var aprobadoPct = pct >= banco.aprobatorio;
+    var autoFail = critFallados.length > 0;
+    var aprobado = aprobadoPct && !autoFail;
+
+    var banner = $("result-banner");
+    banner.className = "result-banner " + (aprobado ? "pass" : "fail");
+    banner.innerHTML =
+      "<div style='font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em'>" +
+      (aprobado ? "Aprobado" : "No aprobado") +
+      "</div>" +
+      '<div class="score">' + Math.round(pct * 100) + "%</div>" +
+      '<div class="detail">' + escapeHtml(state.nombre) + " · perfil " + state.perfil +
+      " · " + aciertos + " / " + total + " correctas</div>";
+
+    $("summary-grid").innerHTML =
+      '<div class="stat"><b>' + aciertos + "</b><span>Aciertos</span></div>" +
+      '<div class="stat"><b>' + (total - aciertos) + "</b><span>Errores</span></div>" +
+      '<div class="stat"><b>' + Math.round(banco.aprobatorio * 100) + "%</b><span>Mínimo</span></div>";
+
+    var critBox = $("crit-box");
+    if (autoFail) {
+      critBox.innerHTML =
+        '<div class="crit-warn"><b>Reprobatorio automático:</b> fallaste reactivo(s) crítico(s): ' +
+        critFallados.join(", ") +
+        ". Aunque el porcentaje sea alto, la evaluación no se aprueba.</div>";
+    } else if (!aprobadoPct) {
+      critBox.innerHTML =
+        '<div class="crit-warn">No alcanzaste el <b>90 %</b> mínimo de aciertos.</div>';
+    } else {
+      critBox.innerHTML = "";
+    }
+
+    var list = $("review-list");
+    list.innerHTML = "";
+    review.forEach(function (r) {
+      var div = document.createElement("div");
+      div.className = "rev " + (r.ok ? "ok" : "bad");
+      var flag = r.q.critico ? ' <span class="flag">crítico</span>' : "";
+      var ansLine;
+      if (r.ok) {
+        ansLine = '<div class="ans">Tu respuesta: <em>' + r.resp.toUpperCase() + "</em> — correcta</div>";
+      } else {
+        ansLine =
+          '<div class="ans">Tu respuesta: <span class="wrong">' +
+          (r.resp ? r.resp.toUpperCase() : "—") +
+          "</span> · Correcta: <em>" +
+          r.q.correcta.toUpperCase() +
+          "</em><br><span style='color:var(--muted)'>" +
+          escapeHtml(r.q.opciones[r.q.correcta]) +
+          "</span></div>";
+      }
+      div.innerHTML =
+        '<div class="meta">' + r.q.id + flag + "</div>" +
+        "<div>" + escapeHtml(r.q.stem) + "</div>" +
+        ansLine;
+      list.appendChild(div);
+    });
+
+    show("screen-result");
+  }
+
+  $("btn-retry").addEventListener("click", function () {
+    state.idx = 0;
+    state.respuestas = {};
+    show("screen-start");
+  });
+})();
+</script>
+</body>
+</html>
