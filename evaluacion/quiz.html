@@ -126,7 +126,21 @@
   .rev .ans em{font-style:normal; color:var(--ok); font-weight:600}
   .rev .ans .wrong{color:var(--bad); font-weight:600}
 
+  .print-only{display:none}
   footer{margin-top:28px; font-size:.8rem; color:var(--muted); text-align:center}
+
+  @media print{
+    .bar, .no-print, footer{display:none!important}
+    .print-only{display:block!important}
+    body{background:#fff; color:#000; min-height:0}
+    .wrap{max-width:none; padding:0; margin:0}
+    .screen{display:none!important}
+    #screen-result.screen.active{display:block!important}
+    .result-banner{break-inside:avoid}
+    .rev{break-inside:avoid; box-shadow:none}
+    .stat{box-shadow:none}
+    a{color:#000; text-decoration:none}
+  }
 </style>
 </head>
 <body>
@@ -199,6 +213,12 @@
 
   <!-- RESULT -->
   <section id="screen-result" class="screen">
+    <div class="print-only" id="print-mast" style="margin-bottom:18px;border-bottom:2px solid #1b2530;padding-bottom:12px">
+      <p class="eyebrow" style="margin:0 0 4px">Trantor Technologies · Mesa de Ayuda</p>
+      <h1 style="font-size:1.25rem;margin:0">Resultados — Evaluación Manual GLPI</h1>
+      <p id="print-meta" style="margin:6px 0 0;color:var(--muted);font-size:.9rem"></p>
+    </div>
+
     <div id="result-banner" class="result-banner"></div>
     <div class="summary-grid" id="summary-grid"></div>
     <div id="crit-box"></div>
@@ -208,9 +228,12 @@
       <div id="review-list"></div>
     </div>
 
-    <div class="nav" style="margin-top:20px">
+    <div class="nav no-print" style="margin-top:20px">
       <button type="button" id="btn-retry">Intentar de nuevo</button>
-      <a href="index.html">Ver versión impresa</a>
+      <div class="right">
+        <button type="button" class="primary" id="btn-pdf">Descargar PDF</button>
+        <a href="index.html">Ver versión impresa</a>
+      </div>
     </div>
   </section>
 
@@ -433,8 +456,40 @@
       list.appendChild(div);
     });
 
+    var fecha = new Date().toLocaleDateString("es-MX", {
+      year: "numeric", month: "long", day: "numeric"
+    });
+    $("print-meta").textContent =
+      state.nombre + " · perfil " + state.perfil + " · " + fecha;
+
+    state.pdfTitle =
+      "Evaluacion-GLPI-" +
+      state.perfil + "-" +
+      slugName(state.nombre) + "-" +
+      Math.round(pct * 100) + "pct";
+
     show("screen-result");
   }
+
+  function slugName(s) {
+    return String(s)
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-zA-Z0-9]+/g, "-")
+      .replace(/^-|-$/g, "")
+      .slice(0, 40) || "resultado";
+  }
+
+  $("btn-pdf").addEventListener("click", function () {
+    var prev = document.title;
+    document.title = state.pdfTitle || "Evaluacion-GLPI-resultado";
+    function restore() {
+      document.title = prev;
+      window.removeEventListener("afterprint", restore);
+    }
+    window.addEventListener("afterprint", restore);
+    window.print();
+  });
 
   $("btn-retry").addEventListener("click", function () {
     state.idx = 0;
