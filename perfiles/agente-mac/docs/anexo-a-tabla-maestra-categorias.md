@@ -29,7 +29,11 @@ Esta tabla concentra, por categoría, todo lo que el agente MAC necesita para re
 | OP > CE > Sellcom BBVA > Cajeros | Ambas | Sucursal real | Coordinador por estado | Clientes Externos | Sí |
 | OP > CE > Sellcom BBVA > CEASC | Ambas | Sucursal real | Coordinador por estado | Clientes Externos | Sí |
 | OP > CE > Sellcom BBVA > Plan Inmobiliario | Ambas | Sucursal real | Coordinador por estado | Clientes Externos | Sí |
+| OP > CE > Sellcom BBVA > Logistica | Ambas | Sucursal real | Coordinador por estado | Clientes Externos | Sí |
+| OP > CE > Sellcom BBVA > Recolecciones | Solo solicitud | Sucursal real | Coordinador por estado | Clientes Externos | Sí |
+| OP > CE > Sellcom BBVA > Soporte Remoto | Ambas | Sucursal real | Coordinador por estado | Clientes Externos | Sí |
 | OP > CE > Sellcom | Ambas | Sucursal real | Coordinador por estado | Clientes Externos | Sí |
+| OP > CE > Gestion Administrativa | Solo solicitud | Sucursal real | Coordinador por estado | Clientes Externos | Sí |
 | OP > CE > Cattri | Ambas | Sucursal real | Coordinador por estado | Clientes Externos | Sí |
 | OP > CE > Lexmark | Ambas | Sucursal real | Coordinador por estado | Clientes Externos | Sí |
 | OP > CE > Pop Media | Ambas | Sucursal real | Coordinador por estado | Clientes Externos | Sí |
