@@ -37,12 +37,14 @@ Resumen operativo para crear un ticket sin errores. Para el detalle, ver la Part
 2. **Validar** que la categoría y la asignación quedaron correctas (doble check).
 3. Llenar **solo la tab de la categoría** + la tab **IDS**.
    - Excepción: Control de Activos no lleva IDS.
+   - Excepción: el folio de Control de Activos lleva también la tab Control de Envíos si el pedido viaja (ver 3.7.3). Sigue sin IDS.
 ## Reglas de oro
  
 - Título siempre en mayúsculas y con la nomenclatura.
 - Mayúsculas **solo** en el título y en `NO APLICA` / `NO PROPORCIONADO`; el resto (descripción y campos de las tabs) con altas y bajas.
 - Fecha de apertura manual, nunca por default.
 - Categoría bien elegida = reglas de negocio correctas.
+- Antes de abrir folio de envío, busca el pedido SAE en GLPI. Si ya existe folio, documenta ahí.
 - Texto libre sin dato: `NO PROPORCIONADO` (debía ir) o `NO APLICA` (no corresponde).
 - Desplegables obligatorios: se seleccionan de la lista, no admiten esas convenciones.
 - CC admite `NO PROPORCIONADO`, nunca `NO APLICA`: todo lleva centro de costos.

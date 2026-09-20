@@ -38,6 +38,8 @@ El reloj del SLA corre sobre un **calendario de horario hábil (5x8)**: cinco d�
  
 Este es un **estándar general provisional**. Más adelante se definirán SLA específicos por tipo de proyecto o servicio, y estos tiempos podrían cambiar por categoría. Cuando eso ocurra, este anexo se actualizará.
  
+> Nota sobre folios consolidados de Control de Activos: cuando el folio de un pedido SAE incluye también la tab Control de Envíos (el pedido viaja), el ticket sigue bajo el estándar de Solicitud (TTO 6 h, TTR 30 h, calendario 5x8), pero puede exceder ese tiempo por depender del tránsito del envío. Está en definición un SLA específico para las categorías administrativas; en tanto no se publique, no se aplican tiempos distintos a los de esta tabla.
+ 
 ## Por qué le importa al agente
  
 Aunque el SLA se asigne solo, el agente es quien determina si se cumple o no, porque:

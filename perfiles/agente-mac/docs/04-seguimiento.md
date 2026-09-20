@@ -34,6 +34,15 @@ Las demás categorías (Laboratorio, Documentación Interna y las de Administrac
  
 La regla es usar la plantilla siempre que exista una que corresponda al momento del ticket: es más rápido y mantiene el registro uniforme. El texto libre se permite **solo cuando ninguna plantilla cubre lo que se necesita documentar**. No es un atajo para saltarse la plantilla, sino una salida para los casos que la plantilla no contempla.
  
+### Hitos mínimos del folio consolidado (Control de Activos)
+ 
+La categoría AD > Almacén > Control de Activos no tiene plantillas configuradas: su seguimiento es siempre texto libre (ver 3.7.3 y 3.7.4). Aplica igual la regla de propiedad de la Parte 4: el agente persigue el dato, no espera. Si Almacén no informa la guía o Logística no confirma la recolección, el agente lo solicita y lo documenta.
+ 
+Hitos mínimos según la ruta de cierre del folio:
+ 
+- **Ruta A - Despacho en oficina:** pedido creado, pedido surtido, entrega en oficina y resolución.
+- **Ruta B - El pedido viaja con guía:** pedido creado, pedido surtido, guía generada (con número y carrier), envío en tránsito (opcional), recolección notificada y resolución.
+ 
 ---
  
 ## 4.3 Catálogo de plantillas

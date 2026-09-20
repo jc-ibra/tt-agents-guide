@@ -57,8 +57,8 @@ Esta tabla concentra, por categoría, todo lo que el agente MAC necesita para re
  
 | Categoría | Tipo visible | Convención SUCURSAL | Asignación | Tab | IDS |
 |---|---|---|---|---|---|
-| AD > Almacén > Control de Activos | Solo solicitud | Sin sucursal (título = CONTROL DE ACTIVOS) | Auto: Antonio Hernández Bermúdez | Control de Activos | No |
-| AD > Servicios Generales > Control de Envíos | Solo solicitud | Sin sucursal (título = CONTROL DE ENVÍOS) | Auto: Gloria Deyanira Guerrero Palomares | Control de Envíos | Sí |
+| AD > Almacén > Control de Activos | Solo solicitud | Sin sucursal (título = CONTROL DE ACTIVOS) | Auto: Antonio Hernández Bermúdez (+ Gloria Deyanira Guerrero Palomares si el pedido viaja) | Control de Activos (+ Control de Envíos si el pedido viaja) | No |
+| AD > Servicios Generales > Control de Envíos | Solo solicitud | Sin sucursal (título = CONTROL DE ENVÍOS) | Auto: Gloria Deyanira Guerrero Palomares | Control de Envíos (envíos sin pedido SAE con folio vigente) | Sí |
 | AD > Servicios Generales > Servicios Internos | Ambas | Sin sucursal (título = SERVICIOS INTERNOS) | Auto: Gloria Deyanira Guerrero Palomares | Áreas Internas | Sí |
 | AD > Tesorería > Viáticos | Solo solicitud | Sin sucursal (título = VIÁTICOS) | Auto: Ramón Escalante Méndez | Fuera de alcance en esta fase | Fuera de alcance |
 | AD > Relaciones Humanas > Personal | Solo solicitud | Sin sucursal (título = PERSONAL) | Auto: Miriam Yennifer López Hipólito | Fuera de alcance en esta fase | Fuera de alcance |
@@ -67,6 +67,7 @@ Esta tabla concentra, por categoría, todo lo que el agente MAC necesita para re
  
 - **Nodos padre no seleccionables:** OP, AD, CE, AI, y los nodos de cliente que solo agrupan (por ejemplo Actinver, Afirme, Sellcom BBVA, Symetry como nodo) no se seleccionan directamente. El agente elige siempre la categoría hoja más específica.
 - **Categorías Edificios (Actinver/Afirme):** son la excepción con Regional propia. El título lleva `CLIENTE - EDIFICIOS - DESCRIPCIÓN` (ej. `ACTINVER - EDIFICIOS - FALLA DE TECLADO`); en la tab Clientes Externos se elige la Regional **Edificios** y la Sucursal se captura como `ACTINVER CORPORATIVO` o `AFIRME CORPORATIVO`. El resto (IDS y demás campos) se llena como cualquier cliente externo (ver 3.7.1).
+- **Folio consolidado (Control de Activos que viaja):** antes de crear un folio de Control de Envíos, el agente busca en GLPI el pedido SAE; si ya tiene folio, el envío se documenta ahí, llenando también la tab Control de Envíos. Es la única excepción a "una tab por categoría" y la categoría nunca cambia. El folio consolidado se mantiene sin IDS. Detalle en 3.7.3, 3.7.4 y Anexo F.
 - **Viáticos y Personal:** en esta fase el agente MAC no crea tickets de estas categorías (se gestionarán mediante formularios más adelante). Sí puede darles seguimiento. Su detalle irá en un anexo posterior.
 - **Fuente:** esta tabla se construyó a partir del catálogo de categorías de GLPI, la matriz de responsables de asignación y la tabla de convenciones de SUCURSAL. Cualquier alta o cambio de categoría debe reflejarse aquí para mantenerla como referencia única.
 ---

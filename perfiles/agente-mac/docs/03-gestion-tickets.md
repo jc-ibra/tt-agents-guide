@@ -285,8 +285,12 @@ Al reabrir el ticket aparecen tabs adicionales en el menú lateral, cada una con
 | OP > AI > Sistemas Internos | Áreas Internas | Sí |
 | OP > AI > Documentación Interna | Áreas Internas | Sí |
 | AD > Servicios Generales > Servicios Internos | Áreas Internas | Sí |
-| AD > Almacén > Control de Activos | Control de Activos | No (única excepción) |
+| AD > Almacén > Control de Activos | Control de Activos (+ Control de Envíos si el pedido viaja) | No (única excepción) |
 | AD > Servicios Generales > Control de Envíos | Control de Envíos | Sí |
+ 
+> **Única excepción a "una tab por categoría".** El folio de AD > Almacén > Control de Activos puede llevar dos tabs: Control de Activos (siempre, al crear el ticket) y Control de Envíos (solo si el pedido SAE viaja). Si el pedido ya tiene folio, no se abre un ticket nuevo de Control de Envíos: el envío se documenta en la segunda tab del mismo folio. El detalle está en 3.7.3 y en el Anexo A.
+ 
+> **Regla de entrada antes de abrir un folio de Control de Envíos.** Antes de crear cualquier ticket de esta categoría, el agente busca en GLPI el número de pedido SAE (o el folio GP) que debe traer la notificación diaria de envíos de Almacén. Si ya existe folio para ese pedido, el envío se documenta ahí. Solo si no existe folio se crea uno nuevo de Control de Envíos. Si la notificación no trae el número de pedido SAE ni el folio GP, el agente lo solicita a Almacén y deja constancia de la gestión en el ticket; la falta de ese dato no es motivo para abrir folio nuevo.
  
 > Nota de alcance: las categorías AD > Tesorería > Viáticos y AD > Relaciones Humanas > Personal quedan fuera del alcance del agente MAC en esta fase para la **creación** de tickets (se gestionarán más adelante mediante formularios). El agente sí puede darles **seguimiento**. Su detalle se documentará en un anexo.
  
@@ -359,9 +363,9 @@ En los campos de texto libre aplica la regla general de datos faltantes.
  
 ### 3.7.3 Tab Control de Activos
  
-Aplica **únicamente** a la categoría AD > Almacén > Control de Activos. Su único fin es documentar la creación de un pedido en Aspel SAE (generalmente lo genera el equipo de Almacén) y darle trazabilidad hasta que el pedido se surte y se cierra.
+Aplica a la categoría AD > Almacén > Control de Activos. Documenta la creación de un pedido en Aspel SAE (generalmente lo genera el equipo de Almacén) y le da trazabilidad hasta que se resuelve.
  
-No se mezcla con Control de Envíos. Si el pedido SAE debe viajar a otro estado y requiere una guía de traslado, eso se registra en un **ticket aparte** de Control de Envíos.
+La categoría **no se cambia en ningún momento del ciclo** del ticket, viaje o no el pedido: cambiarla reasignaría el ticket, rompería el título y alteraría la ruta de escalación. Cuando el pedido debe trasladarse, el envío **no abre un ticket aparte**: se documenta en la tab Control de Envíos del mismo folio (ver 3.7.4). Esta es la única excepción a la regla de "una tab por categoría" (ver 3.7).
  
 | Campo | Obligatorio | Qué se captura |
 |---|---|---|
@@ -376,11 +380,25 @@ En los campos de texto libre aplica la regla general de datos faltantes.
  
 ![Tab Control de Activos con sus campos](capturas/03-06-tab-control-activos.png)
  
+#### Dos rutas de cierre
+ 
+Una vez que el pedido se surte, el destino del equipo define cómo se cierra el folio:
+ 
+- **Ruta A - Despacho en oficina.** El pedido no viaja: se entrega en oficina y lo recoge ahí el personal que lo requiere. No se llena la tab Control de Envíos. El ticket se resuelve cuando el equipo es recogido, documentando quién lo recibe y la fecha.
+- **Ruta B - El pedido viaja con guía.** Cuando se define que el equipo se traslada, se llena la tab Control de Envíos en el **mismo ticket** (ver 3.7.4). El ticket se resuelve hasta que Logística notifica la recolección de la guía, no antes: no se resuelve al surtir el pedido ni al generar la guía.
+ 
+> Una guía por pedido. Un pedido SAE corre con una sola guía. Si por excepción se requiriera una segunda guía, esa se registra en un folio aparte de Control de Envíos, ligado al folio del pedido por el campo "Ticket asociado".
+ 
+Durante la fase de envío (Ruta B), al documentar la guía se agrega a Gloria Deyanira Guerrero Palomares como segundo asignado, sin retirar a Antonio Hernández Bermúdez. El detalle de escalación por fase está en el Anexo C.
+ 
 ---
  
 ### 3.7.4 Tab Control de Envíos
  
-Aplica **únicamente** a la categoría AD > Servicios Generales > Control de Envíos. Documenta cada envío de material o refacción que genera una guía de traslado.
+Esta tab se llena en dos situaciones distintas, según de dónde viene el envío:
+ 
+- **Dentro de un folio de Control de Activos (Ruta B).** Cuando un pedido SAE con folio ya abierto debe viajar, la tab Control de Envíos se llena en ese mismo ticket, sin cambiar la categoría ni el título (ver 3.7.3).
+- **En un folio propio de la categoría AD > Servicios Generales > Control de Envíos.** Se crea un ticket nuevo de esta categoría cuando el envío no proviene de un pedido SAE (refacciones entre técnicos, devoluciones, traslados sueltos) o cuando la guía llega después de que el folio del pedido ya fue resuelto o cerrado; en este último caso no se reabre el folio del pedido, se abre el de envíos ligado por el campo "Ticket asociado".
  
 | Campo | Obligatorio | Qué se captura |
 |---|---|---|
@@ -419,7 +437,7 @@ Se captura **siempre, en todas las categorías, con una única excepción: Contr
  
 Ambos son listas desplegables: **no** admiten `NO PROPORCIONADO` ni `NO APLICA`. Por eso deben seleccionarse correctamente en todas las categorías donde aplica.
  
-**Excepción Control de Activos:** en esta categoría la tab IDS se deja **sin tocar**. Aunque los campos figuran como obligatorios, el sistema no exige llenarlos mientras el agente no entre a esa tab. Como el caso solo documenta el surtido de un pedido SAE y no una atención en sitio, no se registra IDS.
+**Excepción Control de Activos:** en esta categoría la tab IDS se deja **sin tocar**. Aunque los campos figuran como obligatorios, el sistema no exige llenarlos mientras el agente no entre a esa tab. Como el caso solo documenta el surtido de un pedido SAE y no una atención en sitio, no se registra IDS. Esto **no cambia** cuando el folio lleva también la tab Control de Envíos (Ruta B, ver 3.7.3): el folio consolidado se mantiene sin IDS. Los folios propios de Control de Envíos (los que no vienen de un pedido SAE) sí llevan IDS, como cualquier otra categoría.
  
 ![Tab IDS con Nombre y Número de empleado seleccionados](capturas/03-08-tab-ids.png)
  

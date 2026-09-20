@@ -53,7 +53,7 @@ La escalación es **jerárquica y en orden**: se sube al siguiente nivel solo cu
  
 | Categoría | Nivel 1 | Nivel 2 | Nivel 3 |
 |---|---|---|---|
-| AD > Almacén > Control de Activos | Antonio Hernández Bermúdez | Director de Administración | No aplica |
+| AD > Almacén > Control de Activos | Antonio Hernández Bermúdez (ver nota) | Director de Administración | No aplica |
 | AD > Servicios Generales > Control de Envíos | Gloria Deyanira Guerrero Palomares | Director de Administración | No aplica |
 | AD > Servicios Generales > Servicios Internos | Gloria Deyanira Guerrero Palomares | Director de Administración | No aplica |
  
@@ -61,6 +61,7 @@ La escalación es **jerárquica y en orden**: se sube al siguiente nivel solo cu
  
 - **Coordinador Regional:** es el coordinador que corresponde al estado donde se da el servicio (ver tabla de coordinadores por estado, Parte 3.5).
 - **Nivel 1 con nombre:** en las categorías con responsable fijo, el Nivel 1 es la misma persona asignada automáticamente (ver Anexo A). Si cambia el responsable, se actualiza en ambos anexos.
+- **Nivel 1 en los folios consolidados de Control de Activos:** depende de la fase. Durante el surtido del pedido, el Nivel 1 es Antonio Hernández Bermúdez. Durante la fase de envío (Ruta B, cuando se llena también la tab Control de Envíos), el Nivel 1 es Gloria Deyanira Guerrero Palomares, agregada como segundo asignado sin retirar a Antonio Hernández Bermúdez. Nivel 2 y Nivel 3 no cambian. Ver 3.7.3.
 - **Viáticos y Personal:** fuera del alcance del agente MAC en esta fase; sus rutas se documentarán con su anexo correspondiente.
 ---
  

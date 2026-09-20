@@ -292,14 +292,14 @@ window.EVAL_BANCO = {
         },
         {
           id: "B13",
-          stem: "Un pedido SAE (Control de Activos) que debe viajar a otro estado con guía de traslado:",
+          stem: "Un pedido SAE (Control de Activos) que ya tiene folio y debe viajar a otro estado con guía de traslado:",
           opciones: {
-            a: "Se pone todo en el mismo ticket de Control de Activos.",
+            a: "Se documenta en el mismo folio del pedido, llenando también la tab Control de Envíos, sin cambiar la categoría.",
             b: "No se registra.",
-            c: "Se registra en un ticket aparte de Control de Envíos; no se mezcla con Control de Activos.",
+            c: "Siempre se abre un ticket aparte de Control de Envíos, aunque el pedido ya tenga folio.",
             d: "Va en la tab IDS."
           },
-          correcta: "c"
+          correcta: "a"
         },
         {
           id: "B14",
